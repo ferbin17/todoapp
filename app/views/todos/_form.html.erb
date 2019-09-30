@@ -1,0 +1,14 @@
+<div class="search-box">
+  <%= form_with scope: :todo,:url=>{:controller=>"todos",:action=>"search"}, remote: true  do |form|%>
+  <p>
+    <%= form.text_field :search, :placeholder => "Search" %>
+  </p>
+  <% end %>
+</div>
+<div class = "entry-box">
+  <%= form_with scope: :todo, remote: true do |form| %>
+    <p>
+      <%= form.text_field :body, :placeholder => "Enter your todo", :class => "entry" %>
+    </p>
+  <% end %>
+</div>

@@ -1,0 +1,167 @@
+// Place all the styles related to the todos controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.entry-box {
+  align-content: center;
+  vertical-align: middle;
+  width: 100%
+}
+
+.entry{
+  width: 100%
+}
+
+.active-change {
+	display: flex;
+	margin-bottom: 36px;
+	overflow: hidden;
+}
+
+.active-change input {
+	position: absolute !important;
+	clip: rect(0, 0, 0, 0);
+	height: 1px;
+	width: 1px;
+	border: 0;
+	overflow: hidden;
+}
+
+.active-change label {
+	background-color: #e4e4e4;
+	color: rgba(0, 0, 0, 0.6);
+	font-size: 14px;
+	line-height: 1;
+	text-align: center;
+	padding: 8px 16px;
+	margin-right: -1px;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+	transition: all 0.1s ease-in-out;
+}
+
+.active-change label:hover {
+	cursor: pointer;
+}
+
+.active-change input:checked + label {
+	background-color: #a5dc86;
+	box-shadow: none;
+}
+
+.active-change label:first-of-type {
+	border-radius: 4px 0 0 4px;
+}
+
+.active-change label:last-of-type {
+	border-radius: 0 4px 4px 0;
+}
+
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+
+td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.todo-body {
+  border-top: 1px solid black;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  height: auto;
+}
+
+.todo_max{
+  word-wrap: break-word;
+  max-width: 400px;
+}
+
+.todo-time{
+  text-align:left;
+  vertical-align: text-bottom;
+}
+
+.fa {
+  text-decoration: none; 
+  font-size:36px;
+  color:#66bb6a;
+}
+
+// tr:nth-child(even) {background-color: #f2f2f2;}
+
+.delete_todo {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+}
+.delete_todo:hover {
+  opacity: 1;
+}
+.delete_todo:before, .delete_todo:after {
+  position: absolute;
+  left: 15px;
+  content: '';
+  height: 33px;
+  width: 2px;
+  background-color: #66bb6a;
+}
+.delete_todo:before {
+  transform: rotate(45deg);
+}
+.delete_todo:after {
+  transform: rotate(-45deg);
+}
+
+.round {
+  position: relative;
+}
+
+.round label {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 25px;
+  left: 30%;
+  position: absolute;
+  top: 0;
+  width: 25px;
+}
+
+.round label:after {
+  border: 2px solid #fff;
+  border-top: none;
+  border-right: none;
+  content: "";
+  height: 6px;
+  left: 7px;
+  opacity: 0;
+  position: absolute;
+  top: 8px;
+  transform: rotate(-45deg);
+  width: 12px;
+}
+
+.round input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.round input[type="checkbox"]:checked + label {
+  background-color: #66bb6a;
+  border-color: #66bb6a;
+}
+
+.round input[type="checkbox"]:checked + label:after {
+  opacity: 1;
+}
