@@ -14,6 +14,8 @@ class TodosController < ApplicationController
     when "active_status"
       @todos = @@status[:value].where(user_id: current_user.id)
       @@status[:function] = ""
+    when "rearrange"
+      @todos = @@status[:value].where(user_id: current_user.id)
     else
       @@status[:value] = Todo.sort
       @todos = @@status[:value].where(active: true, user_id: current_user.id)
@@ -23,6 +25,7 @@ class TodosController < ApplicationController
   def create
     @todo = Todo.new(parse_params.merge("user_id" => current_user.id))
     if @todo.save
+      Todo.update_position
       redirect_to root_path
     else
       redirect_to root_path
@@ -32,6 +35,7 @@ class TodosController < ApplicationController
   def destroy
     @todo = Todo.find(params[:id])
     @todo.destroy
+    Todo.update_position
     redirect_to root_path
   end
 
@@ -58,13 +62,31 @@ class TodosController < ApplicationController
 
   def active_status
     @@status[:function] = "active_status"
-    @@status[:value] = (params[:active_status] == "active_only" ? Todo.where(active: true).order(id: :desc) : Todo.where(active: false).order(id: :desc))
+    @@status[:value] = (params[:active_status] == "active_only" ? Todo.where(active: true).order(position: :desc) : Todo.where(active: false).order(position: :desc))
     redirect_to root_path
   end
 
   def rearrange
-    p params
-    # p @todo = Todo.find(params[:id])
+    @@status[:function] = "rearrange"
+    if params[:direction] == "down"
+      @todo = Todo.find(params[:id])
+      @nexttodo = Todo.find_by(position: @todo.position-1)
+      positiona = @nexttodo.position
+      @nexttodo.update(position: @todo.position)
+      @todo.update(position: positiona)
+      redirect_to root_path
+    else
+      @todo = Todo.find(params[:id])
+      @nexttodo = Todo.find_by(position: @todo.position+1)
+      position = @nexttodo.position
+      @nexttodo.update(position: @todo.position)
+      @todo.update(position: position)
+      redirect_to root_path
+    end
+  end
+
+  def show
+    @todo = Todo.find(params[:id])
   end
 
   private

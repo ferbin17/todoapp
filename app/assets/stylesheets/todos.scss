@@ -2,19 +2,23 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.entry-box {
+.search-box {
+
+}
+.entry-box input {
   align-content: center;
   vertical-align: middle;
-  width: 100%
+  width: 100%;
+  border-color: lightgreen;
 }
 
 .entry{
   width: 100%
 }
 
+
 .active-change {
 	display: flex;
-	margin-bottom: 36px;
 	overflow: hidden;
 }
 
@@ -28,7 +32,7 @@
 }
 
 .active-change label {
-	background-color: #e4e4e4;
+	background-color: #cccccc;
 	color: rgba(0, 0, 0, 0.6);
 	font-size: 14px;
 	line-height: 1;
@@ -36,7 +40,6 @@
 	padding: 8px 16px;
 	margin-right: -1px;
 	border: 1px solid rgba(0, 0, 0, 0.2);
-	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
 	transition: all 0.1s ease-in-out;
 }
 
@@ -45,7 +48,7 @@
 }
 
 .active-change input:checked + label {
-	background-color: #a5dc86;
+	background-color: #f2f2f2;
 	box-shadow: none;
 }
 
@@ -58,8 +61,8 @@
 }
 
 table {
-  border: 1px solid black;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing:0 20px;
   width: 100%;
 }
 
@@ -74,27 +77,47 @@ td {
   vertical-align: middle;
 }
 
-.todo-body {
-  border-top: 1px solid black;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
-  height: auto;
+tr {
+  background-color: #f2f2f2;
+  border: 1px solid black;
+  border-collapse: separate;
 }
 
-.todo_max{
+.options{
+  width:10%;
+  height: 10%;
+}
+
+.todo_body{
   word-wrap: break-word;
   max-width: 400px;
+}
+
+.todo_body a{
+  text-decoration: none;
+  color: #808080;
+}
+
+.todo_body a:hover {
+  text-decoration: underline;
+  color: #404040;
 }
 
 .todo-time{
   text-align:left;
   vertical-align: text-bottom;
+  opacity: 0.5;
 }
 
 .fa {
-  text-decoration: none; 
+  text-decoration: none;
   font-size:36px;
   color:#66bb6a;
+}
+
+
+.fa:hover{
+  text-decoration: none;
 }
 
 // tr:nth-child(even) {background-color: #f2f2f2;}

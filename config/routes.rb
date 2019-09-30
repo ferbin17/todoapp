@@ -1,11 +1,4 @@
 Rails.application.routes.draw do
-  devise_for :users
-
-  resources :users do
-    resources :todos
-  end
-
-  resources :todos
 
   get 'todos/search'
   post 'todos/search'
@@ -16,6 +9,16 @@ Rails.application.routes.draw do
   get 'todos/rearrange'
   post 'todos/rearrange'
   patch 'todos/rearrange'
+  
+  devise_for :users
+
+  resources :users do
+    resources :todos
+  end
+
+  resources :todos
+
+
 
   root "todos#index"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
