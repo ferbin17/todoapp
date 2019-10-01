@@ -17,3 +17,25 @@
 body {
   background-color: #D3D3D3;
 }
+
+.top-section{
+  margin-top: 20px;
+}
+
+.login_bar {
+  color: #808080;
+}
+
+
+.login_bar:hover {
+  color: #404040;
+}
+
+.nav-section {
+  margin : 25px 0 ;
+}
+
+.icon-section {
+  margin: 25px 0 0 0 ;
+  text-align: center;
+}

@@ -1,2 +1,48 @@
-<%= @todo.body %>
-<%= link_to 'back', root_path %>
+<%= render 'search' %>
+<div class = "back-to-index" >
+  <%= link_to '< Go back to home', root_path, :class => "back-button" %>
+</div>
+<div class = 'todo-detailed' >
+  <div class = "todo-full" >
+    <div class = "todo-body" >
+      <%= @todo.body %>
+    </div>
+    <div class = "close-button" >
+      X
+    </div>
+    <div class = "todo-time" >
+      <%= @todo.created_at.strftime("%l.%M %P, %e %B %Y") %>
+    </div>
+    <div class = "task-bar">
+      <p>Task completion</p>
+      <progress class = "progress-bar" value="10" max="100">
+      </progress>
+    </div>
+    <div class = "shared-users">
+      <p>Shared with :</p>
+      <button type="button" name="button">Share this </button>
+    </div>
+  </div>
+  <div class = "comments">
+    <table>
+      <tr>
+        <div class = "comment-body" >
+          A
+        </div>
+        <div class = "comment-user" >
+          A
+        </div>
+        <div class = "comment-time" >
+          A
+        </div>
+      <tr>
+    </table>
+  </div>
+  <div class = "new-comment">
+    <%= form_with scope: :comment, remote: true do |form| %>
+      <p>
+        <%= form.text_field :body, :placeholder => "Add the comment. Hit 'Enter' to post", :class => "comment-entry" %>
+      </p>
+    <% end %>
+  </div>
+</div>

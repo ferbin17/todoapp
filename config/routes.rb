@@ -1,15 +1,9 @@
 Rails.application.routes.draw do
 
-  get 'todos/search'
   post 'todos/search'
-  get 'todos/update'
-  post 'todos/update'
-  patch 'todos/update'
   post 'todos/active_status'
-  get 'todos/rearrange'
   post 'todos/rearrange'
-  patch 'todos/rearrange'
-  
+
   devise_for :users
 
   resources :users do

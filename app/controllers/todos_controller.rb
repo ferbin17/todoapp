@@ -16,6 +16,10 @@ class TodosController < ApplicationController
       @@status[:function] = ""
     when "rearrange"
       @todos = @@status[:value].where(user_id: current_user.id)
+      @@status[:function] = ""
+    when "update"
+      @todos = @@status[:value].where(user_id: current_user.id)
+      @@status[:function] = ""
     else
       @@status[:value] = Todo.sort
       @todos = @@status[:value].where(active: true, user_id: current_user.id)
@@ -43,17 +47,20 @@ class TodosController < ApplicationController
     @@status[:function] = "search"
     like_keyword = "%#{params.require(:todo).permit(:search)[:search]}%"
     if like_keyword == "%%"
-      @@status[:value] = @@status[:value].where("body LIKE ?", like_keyword).where(active: true)
+      @@status[:value] = Todo.sort.where("body LIKE ?", like_keyword).where(active: true)
     else
-      @@status[:value] = @@status[:value].where("body LIKE ?", like_keyword)
+      @@status[:value] = Todo.sort.where("body LIKE ?", like_keyword)
     end
     redirect_to root_path
   end
 
   def update
+    @@status[:function] = "update"
     @todo = Todo.find(params[:id])
     params[:active] == "true" ? @todo.update(active: false) : @todo.update(active: true)
     if @todo.save
+      Todo.update_position
+      @@status[:value] =  @@status[:value].where(active: params[:active])
       redirect_to root_path
     else
       redirect_to root_path
@@ -62,7 +69,7 @@ class TodosController < ApplicationController
 
   def active_status
     @@status[:function] = "active_status"
-    @@status[:value] = (params[:active_status] == "active_only" ? Todo.where(active: true).order(position: :desc) : Todo.where(active: false).order(position: :desc))
+    @@status[:value] = (params[:active_status] == "active_only" ? Todo.active_only : Todo.inactive_only)
     redirect_to root_path
   end
 
@@ -71,18 +78,18 @@ class TodosController < ApplicationController
     if params[:direction] == "down"
       @todo = Todo.find(params[:id])
       @nexttodo = Todo.find_by(position: @todo.position-1)
-      positiona = @nexttodo.position
+      position = @nexttodo.position
       @nexttodo.update(position: @todo.position)
-      @todo.update(position: positiona)
-      redirect_to root_path
+      @todo.update(position: position)
     else
       @todo = Todo.find(params[:id])
       @nexttodo = Todo.find_by(position: @todo.position+1)
       position = @nexttodo.position
       @nexttodo.update(position: @todo.position)
       @todo.update(position: position)
-      redirect_to root_path
     end
+    @@status[:value] = @@status[:value].where(active: params[:active_status])
+    redirect_to root_path
   end
 
   def show

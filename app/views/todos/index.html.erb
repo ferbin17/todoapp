@@ -1,48 +1,49 @@
-
-  <%= render 'form' %>
+  <!-- <div class = "col-4"> -->
+  <%= render 'search' %>
+  <!-- </div> -->
+ </div>
+  <%= render 'entry' %>
   <div class = "active-change">
-  <% status = (@todos.all? { |todo| todo.active? } ) %>
-  <%= radio_button_tag :active_status, 'active_only', status, data: {url: url_for(action: :active_status), :remote => true, method: :post } %>
-    <label for="active_status_active_only">Active</label>
-  <%= radio_button_tag :active_status, 'inactive_only',!(status), data: {url: url_for(action: :active_status), :remote => true, method: :post }%>
-    <label for="active_status_inactive_only">Inactive</label>
+    <% active_status_active_only = (@todos.to_a == Todo.active_only.where(user_id: current_user.id).to_a)%>
+    <% active_status_inactive_only = (@todos.to_a == Todo.inactive_only.where(user_id: current_user.id).to_a) %>
+    <%= radio_button_tag :active_status, 'active_only', active_status_active_only, data: {url: url_for(action: :active_status), :remote => true, method: :post } %>
+      <label for="active_status_active_only">Active</label>
+    <%= radio_button_tag :active_status, 'inactive_only', active_status_inactive_only, data: {url: url_for(action: :active_status), :remote => true, method: :post }%>
+      <label for="active_status_inactive_only">Inactive</label>
   </div>
 
   <div class = "todo-list">
-      <table class = "table table-hover">
+      <table class = "table">
         <% if @todos.empty? %>
           <tr class = "table-bordered">
             <td> Nothing to show </td>
           </tr>
         <% else %>
           <% @todos.each do |todo| %>
-            <% if current_user.id == todo.user_id %>
                 <tr class = "todo-body table-bordered">
                   <td>
                     <div class = "todo_body">
                       <%= link_to todo.body, todo %>
                     </div>
                     <div class = "todo-time">
-                        <%=todo.created_at.strftime("%l.%M %P %e %B %Y")%>
+                        <%= todo.created_at.strftime("%l.%M %P, %e %B %Y") %>
                     </div>
                   </td>
                   <td class = "options">
-                    <% if @todos.first == todo %>
-
-                    <% else %>
-                      <%= link_to '', todos_rearrange_path(:id => todo.id, :direction => "up"),
-                          data: {url: url_for(action: :rearrange), :remote=> true, method: :post},
-                          :class => 'fa fa-sort-up' %>
+                    <% unless @todos.first == todo %>
+                      <%= link_to '<i class="large material-icons">keyboard_arrow_up</i>'.html_safe, todos_rearrange_path(:id => todo.id, :direction => "up", :active_status => todo.active?),
+                          data: {url: url_for(action: :rearrange), :remote=> true, method: :post} %>
                     <% end %>
                   </td>
                   <td class = "options">
-                    <%= link_to '', todos_rearrange_path(:id => todo.id, :direction => "down"),
-                            data: {url: url_for(action: :rearrange), :remote=> true, method: :post },
-                             :class => 'fa fa-sort-down' %>
+                    <% unless @todos.last == todo %>
+                      <%= link_to '<i class="large material-icons">keyboard_arrow_down</i>'.html_safe, todos_rearrange_path(:id => todo.id, :direction => "down", :active_status => todo.active?),
+                            data: {url: url_for(action: :rearrange), :remote=> true, method: :post } %>
+                    <% end %>
                   </td>
                   <td class = "options">
-                      <%= link_to '', todo, method: :delete, data: { confirm: "Are you sure?" },
-                            :remote=> true, :class => "delete_todo"%>
+                      <%= link_to '<i class="large material-icons">close</i>'.html_safe, todo, method: :delete, data: { confirm: "Are you sure?" },
+                            :remote=> true %>
                   </td>
                   <td class = "options">
                     <div class = "round">
@@ -54,6 +55,5 @@
                 </tr>
             <% end %>
           <% end %>
-        <% end %>
       </table>
   </div>

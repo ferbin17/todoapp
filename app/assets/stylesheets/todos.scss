@@ -2,20 +2,25 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.search-box {
-
-}
-.entry-box input {
-  align-content: center;
+.search {
+  background: transparent;
+  border: 2px solid grey;
+  border-radius: 4px;
   vertical-align: middle;
+  line-height: 2em;
+  padding: 0 10px;
+  width: 20%;
+}
+
+.entry-box input {
+  border: 2px solid lightgreen;
+  border-radius: 4px;
+  vertical-align: middle;
+  line-height: 3em;
+  padding: 0 10px;
   width: 100%;
-  border-color: lightgreen;
+  margin: 10px auto;
 }
-
-.entry{
-  width: 100%
-}
-
 
 .active-change {
 	display: flex;
@@ -32,7 +37,7 @@
 }
 
 .active-change label {
-	background-color: #cccccc;
+	background-color: #f2f2f2;
 	color: rgba(0, 0, 0, 0.6);
 	font-size: 14px;
 	line-height: 1;
@@ -48,7 +53,7 @@
 }
 
 .active-change input:checked + label {
-	background-color: #f2f2f2;
+	background-color: #cccccc;
 	box-shadow: none;
 }
 
@@ -83,67 +88,35 @@ tr {
   border-collapse: separate;
 }
 
-.options{
+.table td {
+  vertical-align: middle;
+}
+
+.options {
   width:10%;
   height: 10%;
 }
 
-.todo_body{
+.todo_body {
+  text-align:left;
   word-wrap: break-word;
-  max-width: 400px;
+  max-width: 600px;
 }
 
-.todo_body a{
+.todo_body a {
   text-decoration: none;
-  color: #808080;
+  color: #404040;
 }
 
 .todo_body a:hover {
   text-decoration: underline;
-  color: #404040;
 }
 
-.todo-time{
+.todo-time {
+  font-size: 12px;
   text-align:left;
   vertical-align: text-bottom;
   opacity: 0.5;
-}
-
-.fa {
-  text-decoration: none;
-  font-size:36px;
-  color:#66bb6a;
-}
-
-
-.fa:hover{
-  text-decoration: none;
-}
-
-// tr:nth-child(even) {background-color: #f2f2f2;}
-
-.delete_todo {
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  opacity: 0.3;
-}
-.delete_todo:hover {
-  opacity: 1;
-}
-.delete_todo:before, .delete_todo:after {
-  position: absolute;
-  left: 15px;
-  content: '';
-  height: 33px;
-  width: 2px;
-  background-color: #66bb6a;
-}
-.delete_todo:before {
-  transform: rotate(45deg);
-}
-.delete_todo:after {
-  transform: rotate(-45deg);
 }
 
 .round {
@@ -187,4 +160,52 @@ tr {
 
 .round input[type="checkbox"]:checked + label:after {
   opacity: 1;
+}
+
+.back-button {
+  text-decoration: none;
+  color: #404040;
+}
+
+.todo-detailed {
+  margin: 25px 0;
+}
+
+.todo-full {
+  border: 1px solid #808080;
+  border-collapse: collapse;
+  padding: 10px;
+  background-color: white;
+}
+
+.comments {
+  padding: 10px;
+  border: 1px solid #808080;
+  border-collapse: collapse;
+}
+
+.new-comment {
+  margin: 25px 0;
+}
+.new-comment input {
+  align-content: center;
+  vertical-align: middle;
+  width: 100%;
+  line-height: 2em;
+}
+
+.todo-body {
+  word-wrap: break-word;
+  max-width: 1000px;
+}
+
+
+.progress-bar {
+  background-color: #ffffff;
+  width: 100%;
+}
+
+.large {
+  color: grey;
+  font-size: 28px;
 }
