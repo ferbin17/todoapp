@@ -4,7 +4,7 @@
 
 .search-box input {
   background: transparent;
-  border: 2px solid #CBCBCB;
+  border: 1px solid #CBCBCB;
   border-radius: 4px;
   vertical-align: middle;
   line-height: 2em;
@@ -19,7 +19,7 @@
 }
 
 .entry-box input {
-  border: 2px solid #00BB9A;
+  border: 1px solid #00BB9A;
   border-radius: 4px;
   vertical-align: middle;
   line-height: 3em;
@@ -54,7 +54,7 @@
 	padding: 8px 16px;
 	margin-right: -1px;
 	transition: all 0.1s ease-in-out;
-  border: 2px solid #CBCBCB;
+  border: 1px solid #CBCBCB;
 }
 
 .active-change label:hover {
@@ -90,7 +90,7 @@
 .todo {
   margin: 25px 0;
   padding: 15px;
-  border: 2px solid #CBCBCB;
+  border: 1px solid #CBCBCB;
   border-radius: 3px;
   background-color: #F4F4F4;
 }
@@ -105,17 +105,22 @@
 }
 
 .todo-time {
+  margin-top: 5px;
   line-height: 2em;
   font-size: 12px;
   vertical-align: text-bottom;
   opacity: 0.5;
 }
 
+.todo-options {
+  padding: 0;
+}
+
 .buttons {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  margin: 0 auto;
+  margin: 0 -5px;
   text-align: right;
 }
 
