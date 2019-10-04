@@ -1,0 +1,43 @@
+
+  <% if @todos.empty? %>
+    <div class = "todo">
+      <p>Nothing to show </p>
+    </div>
+    <% else %>
+      <% @todos.each do |todo| %>
+        <div class = "row todo">
+          <div class = "col-7">
+            <div class = "todo-body">
+              <%= link_to todo.body, todo %>
+            </div>
+            <div class = "todo-time">
+              <%= todo.created_at.strftime("%l.%M %P, %e %B %Y") %>
+            </div>
+          </div>
+          <div class = "col-5">
+            <div class = "row buttons">
+              <div class = "col-1 options">
+                <%= link_to '<i class="icons material-icons up">keyboard_arrow_up</i>'.html_safe, todos_rearrange_path(:id => todo.id, :direction => "up", :active_status => todo.active?),
+                    data: {url: url_for(action: :rearrange), :remote=> true, method: :post} %>
+            </div>
+            <div class = "col-1 options">
+                <%= link_to '<i class="icons material-icons down">keyboard_arrow_down</i>'.html_safe, todos_rearrange_path(:id => todo.id, :direction => "down", :active_status => todo.active?),
+                    data: {url: url_for(action: :rearrange), :remote=> true, method: :post } %>
+            </div>
+            <div class = "col-1 options">
+                <%= link_to '<i class="icons material-icons">close</i>'.html_safe, todo, method: :delete, data:{confirm: "Are you sure ?"}, class: "delete-todo",
+                    :remote=> true %>
+            </div>
+            <div class = "col-1 options round">
+              <div class = "round">
+              <%= check_box_tag todo.id, todo.id, todo.active,
+                  data: {url: url_for(action: :update, active:todo.active, id:todo.id), :remote => true, method: :patch } %>
+                  <label for="<%=todo.id%>"></label>
+              </div>
+              </div>
+            </div>
+          </div>
+          </div>
+      <% end %>
+    <% end %>
+  </div>

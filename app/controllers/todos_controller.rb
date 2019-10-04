@@ -1,80 +1,59 @@
 class TodosController < ApplicationController
 
-  @@status = { :function => "", :value => "" }
+  respond_to :html, :js
 
-  def self.status
-    @@status
-  end
-
+  #index
   def index
-    case @@status[:function]
-    when "search"
-      @todos = @@status[:value].where(user_id: current_user.id)
-      @@status[:function] = ""
-    when "active_status"
-      @todos = @@status[:value].where(user_id: current_user.id)
-      @@status[:function] = ""
-    when "rearrange"
-      @todos = @@status[:value].where(user_id: current_user.id)
-      @@status[:function] = ""
-    when "update"
-      @todos = @@status[:value].where(user_id: current_user.id)
-      @@status[:function] = ""
-    else
-      @@status[:value] = Todo.sort
-      @todos = @@status[:value].where(active: true, user_id: current_user.id)
-    end
+    @todos = get_todos(true)
   end
 
+  #function for crating new todos
   def create
-    @todo = Todo.new(parse_params.merge("user_id" => current_user.id))
+    body = { "body" => params[:create] }
+    @todo = Todo.new(body.merge("user_id" => current_user.id))
     if @todo.save
       Todo.update_position
-      redirect_to root_path
-    else
-      redirect_to root_path
     end
+    @todos = get_todos(true)
   end
 
+  #function for deleteing todos
   def destroy
     @todo = Todo.find(params[:id])
+    active_status = @todo.active?
     @todo.destroy
     Todo.update_position
-    redirect_to root_path
+    @todos = get_todos(active_status)
   end
 
+  #function for searching todo
   def search
-    @@status[:function] = "search"
-    like_keyword = "%#{params.require(:todo).permit(:search)[:search]}%"
+    like_keyword = "%#{params[:search].split("=").last}%";
     if like_keyword == "%%"
-      @@status[:value] = Todo.sort.where("body LIKE ?", like_keyword).where(active: true)
+      @todos = get_todos(true)
     else
-      @@status[:value] = Todo.sort.where("body LIKE ?", like_keyword)
+      @todos = Todo.sort.where("body LIKE ?", like_keyword).where(user_id: current_user.id)
     end
-    redirect_to root_path
   end
 
+  #function to update active status of todo
   def update
-    @@status[:function] = "update"
     @todo = Todo.find(params[:id])
     params[:active] == "true" ? @todo.update(active: false) : @todo.update(active: true)
     if @todo.save
       Todo.update_position
-      @@status[:value] =  @@status[:value].where(active: params[:active])
-      redirect_to root_path
-    else
-      redirect_to root_path
     end
+    @todos = get_todos(params[:active])
   end
 
+  #funciton to show either all active todos or all inactive_only todos
   def active_status
-    @@status[:function] = "active_status"
-    @@status[:value] = (params[:active_status] == "active_only" ? Todo.active_only : Todo.inactive_only)
-    redirect_to root_path
+    @todos = (params[:active_status] == "active_only" ? Todo.active_only : Todo.inactive_only)
+    @todos = @todos.where(user_id: current_user.id)
   end
 
+  #funtion for rearranging todos
   def rearrange
-    @@status[:function] = "rearrange"
     if params[:direction] == "down"
       @todo = Todo.find(params[:id])
       @nexttodo = Todo.find_by(position: @todo.position-1)
@@ -88,16 +67,19 @@ class TodosController < ApplicationController
       @nexttodo.update(position: @todo.position)
       @todo.update(position: position)
     end
-    @@status[:value] = @@status[:value].where(active: params[:active_status])
-    redirect_to root_path
+    @todos = get_todos(params[:active_status])
   end
 
+  #funtion for showing each individual todo
   def show
     @todo = Todo.find(params[:id])
   end
 
   private
-  def parse_params
-    params.require(:todo).permit(:body)
+
+  #funtion to fetch all todos of current user with respect to active status
+  def get_todos(active_status)
+    Todo.sort.where(active: active_status, user_id: current_user.id)
   end
+
 end

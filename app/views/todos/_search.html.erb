@@ -1,7 +1,17 @@
-<div class="search-box">
-  <%= form_with scope: :todo,:url=>{:controller=>"todos",:action=>"search"}, remote: true  do |form|%>
-  <p>
-    <%= form.text_field :search, :placeholder => "Search", :class => "search" %>
-  </p>
-  <% end %>
+<div class = "search-box">
+  <%= text_field_tag :search, "", placeholder: "Search", class: "search_todos" %>
 </div>
+<script>
+
+  $(".search_todos").keyup(function() {
+    $.ajax({
+        url: '/todos/search',
+        data: {search: $(this).val()}
+     });
+  });
+  $(".search_todos").keydown(function() {
+    if (event.which == 27) {
+      $(".search_todos").val('');
+    };
+  });
+</script>

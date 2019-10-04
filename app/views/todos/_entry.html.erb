@@ -1,7 +1,3 @@
 <div class = "entry-box">
-  <%= form_with scope: :todo, remote: true do |form| %>
-    <p>
-      <%= form.text_field :body, :placeholder => "Enter your todo", :class => "todo-entry" %>
-    </p>
-  <% end %>
+  <%= text_field_tag :create, "", placeholder: "Enter your todo", class: "todo-entry" %>
 </div>

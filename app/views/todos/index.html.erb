@@ -1,59 +1,43 @@
-  <!-- <div class = "col-4"> -->
+
   <%= render 'search' %>
-  <!-- </div> -->
- </div>
+
+</div>
+
   <%= render 'entry' %>
+
   <div class = "active-change">
-    <% active_status_active_only = (@todos.to_a == Todo.active_only.where(user_id: current_user.id).to_a)%>
-    <% active_status_inactive_only = (@todos.to_a == Todo.inactive_only.where(user_id: current_user.id).to_a) %>
-    <%= radio_button_tag :active_status, 'active_only', active_status_active_only, data: {url: url_for(action: :active_status), :remote => true, method: :post } %>
+    <%= radio_button_tag :active_status, 'active_only', true, data: {url: url_for(action: :active_status), :remote => true, method: :post } %>
       <label for="active_status_active_only">Active</label>
-    <%= radio_button_tag :active_status, 'inactive_only', active_status_inactive_only, data: {url: url_for(action: :active_status), :remote => true, method: :post }%>
+    <%= radio_button_tag :active_status, 'inactive_only', false, data: {url: url_for(action: :active_status), :remote => true, method: :post }%>
       <label for="active_status_inactive_only">Inactive</label>
   </div>
 
-  <div class = "todo-list">
-      <table class = "table">
-        <% if @todos.empty? %>
-          <tr class = "table-bordered">
-            <td> Nothing to show </td>
-          </tr>
-        <% else %>
-          <% @todos.each do |todo| %>
-                <tr class = "todo-body table-bordered">
-                  <td>
-                    <div class = "todo_body">
-                      <%= link_to todo.body, todo %>
-                    </div>
-                    <div class = "todo-time">
-                        <%= todo.created_at.strftime("%l.%M %P, %e %B %Y") %>
-                    </div>
-                  </td>
-                  <td class = "options">
-                    <% unless @todos.first == todo %>
-                      <%= link_to '<i class="large material-icons">keyboard_arrow_up</i>'.html_safe, todos_rearrange_path(:id => todo.id, :direction => "up", :active_status => todo.active?),
-                          data: {url: url_for(action: :rearrange), :remote=> true, method: :post} %>
-                    <% end %>
-                  </td>
-                  <td class = "options">
-                    <% unless @todos.last == todo %>
-                      <%= link_to '<i class="large material-icons">keyboard_arrow_down</i>'.html_safe, todos_rearrange_path(:id => todo.id, :direction => "down", :active_status => todo.active?),
-                            data: {url: url_for(action: :rearrange), :remote=> true, method: :post } %>
-                    <% end %>
-                  </td>
-                  <td class = "options">
-                      <%= link_to '<i class="large material-icons">close</i>'.html_safe, todo, method: :delete, data: { confirm: "Are you sure?" },
-                            :remote=> true %>
-                  </td>
-                  <td class = "options">
-                    <div class = "round">
-                      <%= check_box_tag todo.id, todo.id, todo.active,
-                              data: {url: url_for(action: :update, active:todo.active, id:todo.id), :remote => true, method: :patch } %>
-                              <label for="<%=todo.id%>"></label>
-                    </div>
-                  </td>
-                </tr>
-            <% end %>
-          <% end %>
-      </table>
+  <div class = "todos">
+    <%= render 'todos' %>
   </div>
+
+  <script>
+
+    $('.up').first().addClass( "invisible" );
+    $('.down').last().addClass( "invisible" );
+
+    $("body").on('DOMSubtreeModified', ".todos", function() {
+      $('.up').first().addClass( "invisible" );
+      $('.down').last().addClass( "invisible" );
+    });
+
+    $(".todo-entry").keydown(function() {
+      if (event.which == 13) {
+        $.ajax({
+          type: 'POST',
+            url: '/todos/',
+            data: {create: $(this).val()}
+        });
+      };
+      if (event.which == 27) {
+        $(".todo-entry").val('');
+      };
+    });
+
+
+  </script>
