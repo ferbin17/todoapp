@@ -24,6 +24,12 @@ class TodosController < ApplicationController
     @todo.destroy
     Todo.update_position
     @todos = get_todos(active_status)
+
+    if params[:pg] == "index"
+      respond_to :js
+    else
+      render :js => "window.location = './'"
+    end
   end
 
   #function for searching todo
@@ -73,6 +79,7 @@ class TodosController < ApplicationController
   #funtion for showing each individual todo
   def show
     @todo = Todo.find(params[:id])
+    @comments = @todo.comments
   end
 
   private

@@ -1,9 +1,6 @@
   <%= render 'search' %>
 </div>
 
-
-<strong class="mouse-cords"></strong>
-
 <div class = "back-to-index" >
   <%= link_to '< Go back to home', root_path, :class => "back-button" %>
 </div>
@@ -68,6 +65,6 @@
     else{
       $(".comment-entry").val('Task has been updated from ' + currentProgress + ' to ' + newProgress + '.');
     }
-    $('.asd').submit();
+    $('.comment-entry-form').submit();
   });
 </script>

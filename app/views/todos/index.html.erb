@@ -46,18 +46,18 @@
       };
     });
 
-    // $(".todo-entry").keydown(function() {
-    //   if (event.which == 13) {
-    //     $.ajax({
-    //       type: 'POST',
-    //         url: '/todos/',
-    //         data: {create: $(this).val()}
-    //     });
-    //   };
-    //   if (event.which == 27) {
-    //     $(".todo-entry").val('');
-    //   };
-    // });
+    $(".todo-entry").keydown(function() {
+      if (event.which == 13) {
+        $.ajax({
+          type: 'POST',
+            url: '/todos/',
+            data: {create: $(this).val()}
+        });
+      };
+      if (event.which == 27) {
+        $(".todo-entry").val('');
+      };
+    });
 
 
   </script>
