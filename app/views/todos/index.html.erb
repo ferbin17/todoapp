@@ -1,9 +1,17 @@
-
-  <%= render 'search' %>
+  <div class = "search-box">
+    <%= text_field_tag :search, "", placeholder: "Search", class: "search_todos" %>
+  </div>
 
 </div>
 
-  <%= render 'entry' %>
+  <div class = "entry-box">
+
+    <%= form_with scope: :todo,url: new_todo_path, remote: true, method: :get do |form| %>
+    <p>
+      <%= form.text_field :create, placeholder: "Enter your todo", class: "todo-entry" %>
+    </p>
+    <% end %>
+  </div>
 
   <div class = "active-change">
     <%= radio_button_tag :active_status, 'active_only', true, data: {url: url_for(action: :active_status), :remote => true, method: :post } %>
@@ -26,18 +34,30 @@
       $('.down').last().addClass( "invisible" );
     });
 
-    $(".todo-entry").keydown(function() {
-      if (event.which == 13) {
-        $.ajax({
-          type: 'POST',
-            url: '/todos/',
-            data: {create: $(this).val()}
-        });
-      };
+    $(".search_todos").keyup(function() {
+      $.ajax({
+          url: '/todos/search',
+          data: {search: $(this).val()}
+       });
+    });
+    $(".search_todos").keydown(function() {
       if (event.which == 27) {
-        $(".todo-entry").val('');
+        $(".search_todos").val('');
       };
     });
+
+    // $(".todo-entry").keydown(function() {
+    //   if (event.which == 13) {
+    //     $.ajax({
+    //       type: 'POST',
+    //         url: '/todos/',
+    //         data: {create: $(this).val()}
+    //     });
+    //   };
+    //   if (event.which == 27) {
+    //     $(".todo-entry").val('');
+    //   };
+    // });
 
 
   </script>

@@ -1,6 +1,7 @@
 class Todo < ApplicationRecord
   validates_presence_of :body
   belongs_to :user
+  has_many :comments, dependent: :destroy
 
   #function to sort todos with respect to posistion in descending order
   def self.sort

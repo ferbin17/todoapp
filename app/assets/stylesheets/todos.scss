@@ -95,6 +95,11 @@
   background-color: #F4F4F4;
 }
 
+.todo-body {
+  word-wrap: break-word;
+  color: #334A5F;
+}
+
 .todo-body a {
   text-decoration: none;
   color: #334A5F;
@@ -177,6 +182,10 @@
   opacity: 1;
 }
 
+.back-to-index {
+  margin: 40px 0 20px 0;
+}
+
 .back-button {
   text-decoration: none;
   color: #404040;
@@ -184,38 +193,131 @@
 
 .todo-detailed {
   margin: 25px 0;
+  border: 1px solid #CBCBCB;
+  border-radius: 3px;
+  border-collapse: collapse;
 }
 
 .todo-full {
-  border: 1px solid #808080;
-  border-collapse: collapse;
-  padding: 10px;
+  border: 1px solid #CBCBCB;
+  background-color: #FFFFFF;
+  padding: 20px;
   background-color: white;
 }
 
+.close-button {
+  padding-left: 20px;
+  text-align: right;
+}
+
+.todo-det-time{
+  margin: 5px 0 15px 0;
+  line-height: 2em;
+  font-size: 16px;
+  vertical-align: text-bottom;
+  opacity: 0.5;
+}
+
+.task-bar {
+  padding-right: 0;
+  margin: 0 0 15px 0;
+}
+
+.task-bar p {
+  color: #334A5F;
+  margin: 0 0 5px 0;
+}
+
+.progress {
+  border-radius: 0px;
+  text-align: center;
+  background-color: #F4F4F4;
+}
+
+.progress-bar {
+  background-color: #00BB99;
+}
+
+.progress-percent {
+  position:absolute;
+  right:0;
+  left:0;
+  color: #33495C;
+  font-weight: bold;
+}
+
+.active-button {
+  top: 25px;
+}
+
+.share-section {
+  margin-top: 10px;
+}
+
+.share-section button {
+  border: 1px solid #989898;
+  border-radius: 3px;
+  background-color: #FEFFFF;
+}
+
+.shared-with{
+  color: #989898;
+  display: inline-block;
+}
+
+.shared-users {
+  display: inline-block;
+  color: #334A5F;
+}
+
 .comments {
+  padding: 0 10px 0 10px;
+  border: 1px solid #CBCBCB;
+  background-color: #F4F4F4;
+  // background-color: #F4F4F4;
+}
+
+.comment {
+  line-height: 1.5em;
   padding: 10px;
-  border: 1px solid #808080;
-  border-collapse: collapse;
+  border-bottom: 1px solid #CBCBCB;
+  background-color: #F4F4F4;
+}
+
+.comment-body {
+  color: #334A5F;
+}
+
+.comment-user {
+  display: inline-block;
+  color: #334A5F;
+  font-weight: bold;
+}
+
+.comment-on {
+  display: inline-block;
+  opacity: 0.5;
+}
+
+.comment-time {
+  display: inline-block;
+  opacity: 0.5;
+}
+
+.last-comment {
+  border-bottom: none;
 }
 
 .new-comment {
   margin: 25px 0;
 }
+
 .new-comment input {
+  border: 1px solid #CBCBCB;
+  border-radius: 4px;
+  padding: 10px 20px 10px 20px;
   align-content: center;
   vertical-align: middle;
   width: 100%;
   line-height: 2em;
-}
-
-.todo-body {
-  word-wrap: break-word;
-  max-width: 1000px;
-}
-
-
-.progress-bar {
-  background-color: #ffffff;
-  width: 100%;
 }
