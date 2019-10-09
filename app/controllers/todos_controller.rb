@@ -4,7 +4,21 @@ class TodosController < ApplicationController
 
   #index
   def index
-    @todos = get_todos(true)
+    if params.key?(:search)
+      # Searching todo
+      like_keyword = "%#{params[:search]}%"
+      @todos = ( like_keyword == "%%" ? get_todos(true) : Todo.sort.search(like_keyword).logged_user(current_user))
+      respond_to :js
+    elsif params.key?(:active_status)
+      # Show either all active todos or all inactive_only todos
+      @todos = (params[:active_status] == "active_only" ? Todo.active_only : Todo.inactive_only)
+      @todos = @todos.logged_user(current_user)
+      respond_to :js
+    else
+      # Show all active todos at first loading
+      @todos = get_todos(true)
+      respond_to :html
+    end
   end
 
   #function for crating new todos
@@ -14,6 +28,7 @@ class TodosController < ApplicationController
     if @todo.save
       Todo.update_position
     end
+
     @todos = get_todos(true)
   end
 
@@ -32,16 +47,6 @@ class TodosController < ApplicationController
     end
   end
 
-  #function for searching todo
-  def search
-    like_keyword = "%#{params[:search].split("=").last}%";
-    if like_keyword == "%%"
-      @todos = get_todos(true)
-    else
-      @todos = Todo.sort.where("body LIKE ?", like_keyword).where(user_id: current_user.id)
-    end
-  end
-
   #function to update active status of todo
   def update
     @todo = Todo.find(params[:id])
@@ -50,12 +55,6 @@ class TodosController < ApplicationController
       Todo.update_position
     end
     @todos = get_todos(params[:active])
-  end
-
-  #funciton to show either all active todos or all inactive_only todos
-  def active_status
-    @todos = (params[:active_status] == "active_only" ? Todo.active_only : Todo.inactive_only)
-    @todos = @todos.where(user_id: current_user.id)
   end
 
   #funtion for rearranging todos
@@ -82,11 +81,27 @@ class TodosController < ApplicationController
     @comments = @todo.comments
   end
 
+  #function for searching todo
+  # def search
+  #   like_keyword = "%#{params[:search].split("=").last}%";
+  #   if like_keyword == "%%"
+  #     @todos = get_todos(true)
+  #   else
+  #     @todos = Todo.sort.where("body LIKE ?", like_keyword).where(user_id: current_user.id)
+  #   end
+  # end
+
+  # #funciton to show either all active todos or all inactive_only todos
+  # def active_status
+  #   @todos = (params[:active_status] == "active_only" ? Todo.active_only : Todo.inactive_only)
+  #   @todos = @todos.where(user_id: current_user.id)
+  # end
+
   private
 
   #funtion to fetch all todos of current user with respect to active status
   def get_todos(active_status)
-    Todo.sort.where(active: active_status, user_id: current_user.id)
+    Todo.sort.where(active: active_status).logged_user(current_user)
   end
 
 end

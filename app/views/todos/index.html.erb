@@ -5,22 +5,18 @@
 </div>
 
   <div class = "entry-box">
-
-    <%= form_with scope: :todo,url: new_todo_path, remote: true, method: :get do |form| %>
-    <p>
-      <%= form.text_field :create, placeholder: "Enter your todo", class: "todo-entry" %>
-    </p>
-    <% end %>
+      <%= text_field_tag :create, "", placeholder: "Enter your todo", class: "todo-entry" %>
   </div>
 
   <div class = "active-change">
-    <%= radio_button_tag :active_status, 'active_only', true, data: {url: url_for(action: :active_status), :remote => true, method: :post } %>
+    <%= radio_button_tag :active_status, 'active_only', true, data: {url: :todos, :remote => true, method: :get} %>
       <label for="active_status_active_only">Active</label>
-    <%= radio_button_tag :active_status, 'inactive_only', false, data: {url: url_for(action: :active_status), :remote => true, method: :post }%>
+    <%= radio_button_tag :active_status, 'inactive_only', false, data: {url: :todos, :remote => true, method: :get }%>
       <label for="active_status_inactive_only">Inactive</label>
   </div>
 
   <div class = "todos">
+    <%= render 'todo' %>
     <%= render 'todos' %>
   </div>
 
@@ -29,17 +25,19 @@
     $('.up').first().addClass( "invisible" );
     $('.down').last().addClass( "invisible" );
 
-    $("body").on('DOMSubtreeModified', ".todos", function() {
-      $('.up').first().addClass( "invisible" );
-      $('.down').last().addClass( "invisible" );
-    });
+    // $("body").on('DOMSubtreeModified', ".todos", function() {
+    //   $('.up').first().addClass( "invisible" );
+    //   $('.down').last().addClass( "invisible" );
+    // });
 
     $(".search_todos").keyup(function() {
       $.ajax({
-          url: '/todos/search',
+          type: 'GET',
+          url: '/todos',
           data: {search: $(this).val()}
        });
     });
+
     $(".search_todos").keydown(function() {
       if (event.which == 27) {
         $(".search_todos").val('');
