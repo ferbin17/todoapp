@@ -27,9 +27,9 @@ class TodosController < ApplicationController
   def create
     body = { "body" => params[:create] }
     @todo = Todo.new(body.merge("user_id" => current_user.id))
-    if @todo.save
-      Todo.update_position
-    end
+    @todo.save
+      # Todo.update_position
+
     @todos = get_todos(true)
   end
 
@@ -37,7 +37,7 @@ class TodosController < ApplicationController
   def destroy
     @todo = Todo.find(params[:id])
     @todo.destroy
-    Todo.update_position
+    # Todo.update_position
 
     @todos = get_todos(@todo.active?)
 
@@ -53,9 +53,8 @@ class TodosController < ApplicationController
     @todo = Todo.find(params[:id])
     params[:active] == "true" ? @todo.update(active: false) : @todo.
         update(active: true)
-    if @todo.save
-      Todo.update_position
-    end
+    @todo.save
+      # Todo.update_position
 
     @todos = get_todos(params[:active])
   end
@@ -63,7 +62,7 @@ class TodosController < ApplicationController
   #funtion for rearranging todos
   def rearrange
     @todo = Todo.find(params[:id])
-    @direction = params[:direction] 
+    @direction = params[:direction]
     if params[:direction] == "down"
       Todo.move("down",params[:id])
     else

@@ -1,6 +1,6 @@
 var current_div  = $('#T<%= @todo.id %>');
 current_todo = current_div.clone();
-if ('<%=@direction%>' == "down"){
+if ('<%= @direction %>' == "down"){
   var next_div  = $('#T<%= @todo.id %>').next();
   next_todo = next_div.clone();
   next_div.replaceWith(current_todo);

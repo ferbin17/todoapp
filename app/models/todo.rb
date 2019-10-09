@@ -2,6 +2,8 @@ class Todo < ApplicationRecord
   validates_presence_of :body
   belongs_to :user
   has_many :comments, dependent: :destroy
+  after_save :update_position
+  after_destroy :update_position
 
   scope :search, lambda { |like_keyword| where("body LIKE ?", like_keyword) }
   scope :logged_user, lambda { |current_user| where(user_id: current_user.id) }
@@ -33,14 +35,14 @@ class Todo < ApplicationRecord
   end
 
   #function to update position value with respect to posistion in descending order
-  def self.update_position
-    Todo.where(active: true).order(:updated_at).each.with_index(1) do |todo, index|
-      todo.update_column :position, index
-    end
+  private
+    def update_position
+      Todo.where(active: true).order(:updated_at).each.with_index(1) do |todo, index|
+        todo.update_column :position, index
+      end
 
-    Todo.where(active: false).order(:updated_at).each.with_index(10000) do |todo, index|
-      todo.update_column :position, index
+      Todo.where(active: false).order(:updated_at).each.with_index(10000) do |todo, index|
+        todo.update_column :position, index
+      end
     end
-  end
-
 end
