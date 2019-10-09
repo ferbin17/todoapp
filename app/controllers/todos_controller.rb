@@ -62,12 +62,13 @@ class TodosController < ApplicationController
 
   #funtion for rearranging todos
   def rearrange
+    @todo = Todo.find(params[:id])
+    @direction = params[:direction] 
     if params[:direction] == "down"
       Todo.move("down",params[:id])
     else
       Todo.move("up",params[:id])
     end
-    @todos = get_todos(params[:active_status])
   end
 
   #funtion for showing each individual todo

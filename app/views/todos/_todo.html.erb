@@ -1,6 +1,6 @@
 
 <% unless todo.id.nil? %>
-  <div id = "C<%= todo.id %>" class = "row todo">
+  <div id = "T<%= todo.id %>" class = "row todo">
     <div class = "col-8">
       <div class = "todo-body">
         <%= link_to todo.body, todo %>
@@ -13,7 +13,7 @@
       <div class = "row buttons">
         <div class = "col-1 options">
           <%= link_to '<i class="icons material-icons up">keyboard_arrow_up</i>'.html_safe, todos_rearrange_path(:id => todo.id, :direction => "up", :active_status => todo.active?),
-              data: {url: url_for(action: :rearrange), :remote=> true, method: :post} %>
+              data: {url: url_for(action: :rearrange) , :remote=> true, method: :post} %>
         </div>
         <div class = "col-1 options">
           <%= link_to '<i class="icons material-icons down">keyboard_arrow_down</i>'.html_safe, todos_rearrange_path(:id => todo.id, :direction => "down", :active_status => todo.active?),
@@ -32,10 +32,3 @@
     </div>
   </div>
 <% end %>
-
-<script>
-  $('.up').removeClass( "invisible" );
-  $('.down').removeClass( "invisible" );
-  $('.up').first().addClass( "invisible" );
-  $('.down').last().addClass( "invisible" );
-</script>
