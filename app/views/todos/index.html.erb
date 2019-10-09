@@ -16,19 +16,21 @@
   </div>
 
   <div class = "todos">
-    <%= render 'todo' %>
-    <%= render 'todos' %>
+    <% if @todos.empty? %>
+      <div class = "todo">
+        <p>Nothing to show </p>
+      </div>
+    <% else %>
+      <% @todos.each do |todo| %>
+        <%= render 'todo', todo: todo %>
+      <% end %>
+    <% end %>
   </div>
 
   <script>
 
     $('.up').first().addClass( "invisible" );
     $('.down').last().addClass( "invisible" );
-
-    // $("body").on('DOMSubtreeModified', ".todos", function() {
-    //   $('.up').first().addClass( "invisible" );
-    //   $('.down').last().addClass( "invisible" );
-    // });
 
     $(".search_todos").keyup(function() {
       $.ajax({

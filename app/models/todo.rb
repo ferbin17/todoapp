@@ -5,23 +5,32 @@ class Todo < ApplicationRecord
 
   scope :search, lambda { |like_keyword| where("body LIKE ?", like_keyword) }
   scope :logged_user, lambda { |current_user| where(user_id: current_user.id) }
-  scope :active_only, -> { where(active: true).order(position: :desc) }
+  scope :active_only, ->  { where(active: true).order(position: :desc) }
   scope :inactive_only, -> { where(active: false).order(position: :desc) }
+
   #function to sort todos with respect to posistion in descending order
   def self.sort
     @todos = Todo.all
     return @todos.order(position: :desc)
   end
 
-  #function to fetch all active todos with respect to posistion in descending order
-  # def self.active_only
-  #   Todo.where(active: true).order(position: :desc)
-  # end
+  def self.move(direction, id)
+    case direction
+    when "down"
+      @todo = Todo.find(id)
+      @nexttodo = Todo.find_by(position: @todo.position-1)
+      position = @nexttodo.position
+      @nexttodo.update(position: @todo.position)
+      @todo.update(position: position)
 
-  #funtion to fetch all inactive todos with respect to posistion in descending order
-  # def self.inactive_only
-  #   Todo.where(active: false).order(position: :desc)
-  # end
+    when "up"
+      @todo = Todo.find(id)
+      @nexttodo = Todo.find_by(position: @todo.position+1)
+      position = @nexttodo.position
+      @nexttodo.update(position: @todo.position)
+      @todo.update(position: position)
+    end
+  end
 
   #function to update position value with respect to posistion in descending order
   def self.update_position

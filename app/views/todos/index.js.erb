@@ -1,4 +1,5 @@
 $(".todos").html("<%= escape_javascript render(:partial => 'todos', :locals => { :todos => @todos }) %>");
+
 var status1 = <%= (@todos.to_a == Todo.active_only.where(user_id: current_user.id).to_a) || @todos.all? { |todo| todo.active == true } %> ;
 $("#active_status_active_only").prop("checked", status1);
 var status2 = <%= @todos.to_a == Todo.inactive_only.where(user_id: current_user.id).to_a || @todos.all? { |todo| todo.active == false } %> ;

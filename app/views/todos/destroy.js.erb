@@ -1,5 +1,11 @@
-$(".todos").html("<%= escape_javascript render(:partial => 'todos', :locals => { :todos => @todos }) %>");
+$('#C<%= j @todo.id %>').remove();
+
 var status1 = <%= (@todos.to_a == Todo.active_only.where(user_id: current_user.id).to_a) %> ;
 $("#active_status_active_only").prop("checked", status1);
 var status2 = <%= @todos.to_a == Todo.inactive_only.where(user_id: current_user.id).to_a %> ;
 $("#active_status_inactive_only").prop("checked", status2);
+
+$('.up').removeClass( "invisible" );
+$('.down').removeClass( "invisible" );
+$('.up').first().addClass( "invisible" );
+$('.down').last().addClass( "invisible" );
