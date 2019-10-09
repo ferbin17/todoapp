@@ -1,9 +1,13 @@
 class Todo < ApplicationRecord
+
   validates_presence_of :body
+
   belongs_to :user
-  has_many :comments, dependent: :destroy
+
   after_save :update_position
   after_destroy :update_position
+
+  has_many :comments, dependent: :destroy
 
   scope :search, lambda { |like_keyword| where("body LIKE ?", like_keyword) }
   scope :logged_user, lambda { |current_user| where(user_id: current_user.id) }

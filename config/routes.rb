@@ -1,9 +1,4 @@
 Rails.application.routes.draw do
-
-  get 'todos/search'
-
-  post 'todos/active_status'
-
   post 'todos/rearrange'
 
   devise_for :users

@@ -10,12 +10,14 @@ class TodosController < ApplicationController
       @todos = ( like_keyword == "%%" ? get_todos(true) : Todo.sort.
           search(like_keyword).logged_user(current_user))
       respond_to :js
+
     elsif params.key?(:active_status)
       # Show either all active todos or all inactive_only todos
       @todos = (params[:active_status] == "active_only" ? Todo.
           active_only : Todo.inactive_only)
       @todos = @todos.logged_user(current_user)
       respond_to :js
+      
     else
       # Show all active todos at first loading
       @todos = get_todos(true)
@@ -28,7 +30,6 @@ class TodosController < ApplicationController
     body = { "body" => params[:create] }
     @todo = Todo.new(body.merge("user_id" => current_user.id))
     @todo.save
-      # Todo.update_position
 
     @todos = get_todos(true)
   end
@@ -37,7 +38,6 @@ class TodosController < ApplicationController
   def destroy
     @todo = Todo.find(params[:id])
     @todo.destroy
-    # Todo.update_position
 
     @todos = get_todos(@todo.active?)
 
@@ -54,7 +54,6 @@ class TodosController < ApplicationController
     params[:active] == "true" ? @todo.update(active: false) : @todo.
         update(active: true)
     @todo.save
-      # Todo.update_position
 
     @todos = get_todos(params[:active])
   end
