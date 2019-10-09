@@ -1,9 +1,0 @@
-<% if @todos.empty? %>
-  <div class = "todo">
-    <p>Nothing to show </p>
-  </div>
-<% else %>
-  <% @todos.each do |todo| %>
-    <%= render 'todo', todo: todo %>
-  <% end %>
-<% end %>

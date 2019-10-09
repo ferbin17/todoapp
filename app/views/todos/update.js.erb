@@ -1,4 +1,4 @@
-$('#C<%= j @todo.id %>').remove();
+$('#T<%= j @todo.id %>').remove();
 
 var status1 = <%= (@todos.to_a == Todo.active_only.where(user_id: current_user.id).to_a) %> ;
 $("#active_status_active_only").prop("checked", status1);
