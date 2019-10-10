@@ -4,8 +4,8 @@ class Todo < ApplicationRecord
 
   belongs_to :user
 
-  after_save :update_position
-  after_destroy :update_position
+  # after_save :update_position
+  # after_destroy :update_position
 
   has_many :comments, dependent: :destroy
 
@@ -40,7 +40,7 @@ class Todo < ApplicationRecord
 
   #function to update position value with respect to posistion in descending order
   private
-    def update_position
+    def self.update_position
       Todo.where(active: true).order(:updated_at).each.with_index(1) do |todo, index|
         todo.update_column :position, index
       end

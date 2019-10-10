@@ -29,7 +29,9 @@ class TodosController < ApplicationController
   def create
     body = { "body" => params[:create] }
     @todo = Todo.new(body.merge("user_id" => current_user.id))
-    @todo.save
+    if @todo.save
+      Todo.update_position
+    end
 
     @todos = get_todos(true)
   end
@@ -38,13 +40,14 @@ class TodosController < ApplicationController
   def destroy
     @todo = Todo.find(params[:id])
     @todo.destroy
+    Todo.update_position
 
     @todos = get_todos(@todo.active?)
 
     if params[:pg] == "index"
       respond_to :js
     else
-      render :js => "window.location = './'"
+      render :js => "window.location = './../'"
     end
   end
 
@@ -53,7 +56,9 @@ class TodosController < ApplicationController
     @todo = Todo.find(params[:id])
     params[:active] == "true" ? @todo.update(active: false) : @todo.
         update(active: true)
-    @todo.save
+    if @todo.save
+      Todo.update_position
+    end
 
     @todos = get_todos(params[:active])
   end
