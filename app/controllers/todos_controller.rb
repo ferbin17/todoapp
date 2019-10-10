@@ -17,7 +17,7 @@ class TodosController < ApplicationController
           active_only : Todo.inactive_only)
       @todos = @todos.logged_user(current_user)
       respond_to :js
-      
+
     else
       # Show all active todos at first loading
       @todos = get_todos(true)

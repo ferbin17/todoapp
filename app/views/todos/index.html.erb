@@ -9,9 +9,9 @@
   </div>
 
   <div class = "active-change">
-    <%= radio_button_tag :active_status, 'active_only', true, data: {url: :todos, :remote => true, method: :get} %>
+    <%= radio_button_tag :active_status, 'active_only', true, data: {url: :todos, remote: true, method: :get} %>
       <label for="active_status_active_only">Active</label>
-    <%= radio_button_tag :active_status, 'inactive_only', false, data: {url: :todos, :remote => true, method: :get }%>
+    <%= radio_button_tag :active_status, 'inactive_only', false, data: {url: :todos, remote: true, method: :get }%>
       <label for="active_status_inactive_only">Inactive</label>
   </div>
 
@@ -29,7 +29,18 @@
 
   <script>
 
-    arrow_correction()
+    var empty = <%= @todos.empty? %>
+    if (empty){
+      status1 = status2 = false;
+    }
+    else{
+      var status1 = <%= (@todos.to_a == Todo.active_only.where(user_id: current_user.id).to_a) || @todos.all? { |todo| todo.active == true } %> ;
+      var status2 = <%= @todos.to_a == Todo.inactive_only.where(user_id: current_user.id).to_a || @todos.all? { |todo| todo.active == false } %> ;
+    };
+    $("#active_status_active_only").prop("checked", status1);
+    $("#active_status_inactive_only").prop("checked", status2);
+
+    arrow_correction();
 
     $(".search_todos").keyup(function() {
       $.ajax({
@@ -59,10 +70,10 @@
     });
 
     function arrow_correction(){
-      $('.up').removeClass( "invisible" );
-      $('.down').removeClass( "invisible" );
-      $('.up').first().addClass( "invisible" );
-      $('.down').last().addClass( "invisible" );
+      ($('.up').parent()).removeClass( "invisible" );
+      ($('.down').parent()).removeClass( "invisible" );
+      ($('.up').parent()).first().addClass( "invisible" );
+      ($('.down').parent()).last().addClass( "invisible" );
     }
 
   </script>

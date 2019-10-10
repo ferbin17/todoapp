@@ -12,6 +12,7 @@
   width: 30%;
   color: #334A5F;
   caret-color: #334A5F;
+  margin: 3px;
 }
 
 .entry-box {
@@ -33,7 +34,7 @@
 .active-change {
 	display: flex;
 	overflow: hidden;
-  margin-bottom: 20px;
+  margin: 50px 0 0 0;
 }
 
 .active-change input {
@@ -286,6 +287,10 @@
 
 .comment-body {
   color: #334A5F;
+}
+
+.green-text {
+  color: #CACACA;
 }
 
 .comment-user {
