@@ -65,7 +65,6 @@ class TodosController < ApplicationController
 
   #funtion for rearranging todos
   def rearrange
-    p params
     @todo = Todo.find(params[:id])
     @direction = params[:direction]
     if params[:direction] == "down"
