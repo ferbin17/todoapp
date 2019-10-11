@@ -4,15 +4,17 @@ class CommentsController < ApplicationController
 
   def create
     @todo = Todo.find(params[:todo_id])
-    @comment = @todo.comments.new(comment_params)
-    @comment.save
+    @comment = @todo.comments.new(comment_params.merge("user_id" => current_user.id))
+    if @comment.save
+      @todo.update(completion_status: params[:new_value]);
+      @todo.save
+    end
 
     @comments = @todo.comments
-    redirect_to @todo
   end
 
   private
     def comment_params
-      params.require(:comment).permit(:body).merge("user_id" => current_user.id)
+      { "body" => params[:comment] }
     end
 end

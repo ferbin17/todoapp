@@ -1,0 +1,12 @@
+<div class = "comment">
+  <div class = "comment-body" >
+    <% a = comment.body %>
+    <% a = a.scan(/([\w ]+) ([\d]+\%)/) %>
+    <p><%= a[0][0] %> <span class="green-text"><%= a[1][1] %></span><%= a[1][0] %> <span class="green-text"><%= a[1][1] %></span>.</p>
+  </div>
+  <div class = "comment-user-time" >
+    <p class = "comment-user"> <%= User.find(comment.user_id).name %> </p>
+    <p class= "comment-on"> &nbsp on &nbsp </p>
+    <p class = "comment-time" > <%= comment.created_at.strftime("%l.%M %P, %e %B %Y") %> </p>
+  </div>
+</div>

@@ -1,2 +1,5 @@
-$(".comments").html("<%= escape_javascript render(:partial => 'comments', :locals => { :comments => @comments }) %>");
+$(".comments").append("<%= escape_javascript render(:partial => 'comment', :locals => { :comment => @comment }) %>");
+
 $(".comment-entry").val('');
+
+$('.comment').last().addClass( "last-comment" );
