@@ -9,6 +9,7 @@ class TodosController < ApplicationController
       like_keyword = "%#{params[:search]}%"
       @todos = ( like_keyword == "%%" ? get_todos(true) : Todo.sort.
           search(like_keyword).logged_user(current_user))
+      @todos = @todos.paginate(:page => params[:page], per_page: 5)
       respond_to :js
 
     elsif params.key?(:active_status)
@@ -16,12 +17,12 @@ class TodosController < ApplicationController
       @todos = (params[:active_status] == "active_only" ? Todo.
           active_only : Todo.inactive_only)
       @todos = @todos.logged_user(current_user)
-      respond_to :js
+      @todos = @todos.paginate(:page => params[:page], per_page: 5)
 
     else
       # Show all active todos at first loading
       @todos = get_todos(true)
-      respond_to :html
+      @todos = @todos.paginate(:page => params[:page], per_page: 5)
     end
   end
 
@@ -65,7 +66,6 @@ class TodosController < ApplicationController
 
   #funtion for rearranging todos
   def rearrange
-    p params
     @todo = Todo.find(params[:id])
     @direction = params[:direction]
     if params[:direction] == "down"

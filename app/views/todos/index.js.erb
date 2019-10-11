@@ -3,10 +3,14 @@ if (mode){
   $(".search_todos").val('');
 };
 
+
 $(".todos").html(`<% if @todos.empty? %><div class = "todo">
       <p>Nothing to show </p></div><% else %>
       <% @todos.each do |todo| %><%= render 'todo', todo: todo %>
-      <% end %><% end %>`);
+      <% end %><% end %>    <div class="digg_pagination">
+      <%= will_paginate @todos, page_links: false %></div>`);
+
+$('.pagination a').attr('data-remote', 'true');
 
 var empty = <%= @todos.empty? %>
 if (empty){

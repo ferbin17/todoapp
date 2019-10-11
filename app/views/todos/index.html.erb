@@ -25,7 +25,12 @@
         <%= render 'todo', todo: todo %>
       <% end %>
     <% end %>
+
+    <div class="digg_pagination">
+      <%= will_paginate @todos, page_links: false %>
+    </div>
   </div>
+
 
   <script>
 
@@ -67,6 +72,10 @@
       if (event.which == 27) {
         $(".todo-entry").val('');
       };
+    });
+
+    $(function(){
+     $('.pagination a').attr('data-remote', 'true');
     });
 
     function arrow_correction(){
