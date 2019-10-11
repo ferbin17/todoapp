@@ -20,19 +20,19 @@ class Todo < ApplicationRecord
     return @todos.order(position: :desc)
   end
 
-  def self.move(direction, id)
+  def self.move(direction, id, current_user)
     case direction
     when "down"
       @todo = Todo.find(id)
-      @nexttodo = Todo.find_by(position: @todo.position-1)
-      position = @nexttodo.position
+      @nexttodo = Todo.where("position < ? AND user_id = ?",@todo.position ,current_user.id).order(position: :desc).limit(1)
+      position = @nexttodo[0].position
       @nexttodo.update(position: @todo.position)
       @todo.update(position: position)
 
     when "up"
       @todo = Todo.find(id)
-      @nexttodo = Todo.find_by(position: @todo.position+1)
-      position = @nexttodo.position
+      @nexttodo = Todo.where("position > ? AND user_id = ?",@todo.position ,current_user.id).order(position: :asc).limit(1)
+      position = @nexttodo[0].position
       @nexttodo.update(position: @todo.position)
       @todo.update(position: position)
     end
