@@ -4,54 +4,57 @@
 </div>
 
 <div class = "back-to-index" >
-  <%= link_to '< Go back to home', root_path, :class => "back-button" %>
+  <%= link_to '< Go back to home', root_path, :id => "back-button" %>
 </div>
-
-<div class = 'todo-detailed' >
-  <div class = "todo-full" >
-    <div class = "row">
-      <div class = "todo-body col-11" >
-        <%= @todo.body %>
-      </div>
-      <div class = "close-button col-1" >
-        <%= link_to '<i class="icons material-icons">close</i>'.html_safe, @todo, method: :delete, data:{confirm: "Are you sure ?"}, class: "delete-todo",
-            :remote=> true %>
-      </div>
-    </div>
-    <div class = "todo-det-time" >
-      <%= @todo.created_at.strftime("%l.%M %P, %e %B %Y") %>
-    </div>
-    <div class = "row">
-      <div class = "task-bar col-11">
-        <p>Task completion</p>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" style="width:<%= @todo.completion_status %>%" aria-valuenow="<%= @todo.completion_status %>" aria-valuemin="0" aria-valuemax="100">
-            <span class="progress-percent"><%= @todo.completion_status %>%</span>
-          </div>
+<div class = "content">
+  <div class = 'todo-detailed' >
+    <div class = "todo-full" >
+      <div class = "row">
+        <div class = "todo-body col-11" >
+          <%= @todo.body %>
+        </div>
+        <div class = "close-button col-1" >
+          <%= link_to '<i class="icons material-icons">close</i>'.html_safe, @todo, method: :delete, data:{confirm: "Are you sure ?"}, class: "delete-todo",
+              :remote=> true %>
         </div>
       </div>
-      <div class = "col-1 round active-button">
-      <%= check_box_tag @todo.id, @todo.id, @todo.active,
-          data: {url: url_for(action: :update, active:@todo.active, id:@todo.id), :remote => true, method: :patch }%>
-          <label for="<%=@todo.id%>"></label>
+      <div class = "todo-det-time" >
+        <%= @todo.created_at.strftime("%l.%M %P, %e %B %Y") %>
+      </div>
+      <div class = "row">
+        <div class = "task-bar col-11">
+          <p>Task completion</p>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width:<%= @todo.completion_status %>%" aria-valuenow="<%= @todo.completion_status %>" aria-valuemin="0" aria-valuemax="100">
+              <span class="progress-percent"><%= @todo.completion_status %>%</span>
+            </div>
+          </div>
+        </div>
+        <div class = "col-1 round active-button">
+        <%= check_box_tag @todo.id, @todo.id, @todo.active,
+            data: {url: url_for(action: :update, active:@todo.active, id:@todo.id), :remote => true, method: :patch }%>
+            <label for="<%=@todo.id%>"></label>
+        </div>
+      </div>
+      <div class = "share-section">
+        <p class= "shared-with">Shared with : &nbsp</p>
+        <p class = "shared-users">a</p><br>
+        <button type="button" name="button">Share this </button>
       </div>
     </div>
-    <div class = "share-section">
-      <p class= "shared-with">Shared with : &nbsp</p>
-      <p class = "shared-users">a</p><br>
-      <button type="button" name="button">Share this </button>
+    <div class = "comments">
+      <% @comments.each do |comment| %>
+        <%= render 'comments/comment', comment: comment %>
+      <% end %>
     </div>
   </div>
-  <div class = "comments">
-    <% @comments.each do |comment| %>
-      <%= render 'comments/comment', comment: comment %>
-    <% end %>
+  <div class = "new-comment">
+    <%= render 'comments/form' %>
   </div>
 </div>
-<div class = "new-comment">
-  <%= render 'comments/form' %>
-</div>
+
 <script>
+
   var todo_id = <%= @todo.id %>;
 
   if( $('.comment').length == 0) {
@@ -63,7 +66,7 @@
       $.ajax({
         type: 'POST',
           url: '/todos/' + todo_id + '/comments',
-          data: {comment: $('.comment-entry').val()}
+          data: {comment: $('.comment-entry').val()},
       });
     };
     if (event.which == 27) {
@@ -81,11 +84,6 @@
     var width = (((($(this).children())[0])["style"])["width"]);
     var newProgress = Math.round((xPosition/587)*100);
 
-    if (width != newProgress+"%"){
-      $('.progress-bar').css('width',newProgress+'%');
-      $('.progress-bar').attr('aria-valuenow',newProgress);
-      $('.progress-percent').text(newProgress+"%");
-
       if (newProgress == 100){
         $(".comment-entry").val('Status of the task changed to Done.');
       }
@@ -97,12 +95,20 @@
         $.ajax({
           type: 'POST',
           url: '/todos/' + todo_id + '/comments',
-          data: {comment: $('.comment-entry').val(),new_value: newProgress}
+          data: {comment: $('.comment-entry').val(), new_value: newProgress},
+          success: function(){
+            if (width != newProgress+"%"){
+              $('.progress-bar').css('width',newProgress+'%');
+              $('.progress-bar').attr('aria-valuenow',newProgress);
+              $('.progress-percent').text(newProgress+"%");
+            }
+          }
         });
       };
 
-    };
-    
   });
+
+  $('.comment').removeClass( "last-comment" );
+  $('.comment').last().addClass( "last-comment" );
 
 </script>

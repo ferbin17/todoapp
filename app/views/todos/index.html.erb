@@ -9,7 +9,7 @@
   </div>
 
   <div class = "active-change">
-    <%= radio_button_tag :active_status, 'active_only', true, data: {url: :todos, remote: true, method: :get} %>
+    <%= radio_button_tag :active_status, 'active_only', false, data: {url: :todos, remote: true, method: :get} %>
       <label for="active_status_active_only">Active</label>
     <%= radio_button_tag :active_status, 'inactive_only', false, data: {url: :todos, remote: true, method: :get }%>
       <label for="active_status_inactive_only">Inactive</label>
@@ -25,10 +25,11 @@
         <%= render 'todo', todo: todo %>
       <% end %>
     <% end %>
-
-    <div class="digg_pagination">
-      <%= will_paginate @todos, page_links: false %>
-    </div>
+  </div>
+  <div id = "loading_messgage">
+  </div>
+  <div class="digg_pagination">
+    <%= will_paginate @todos, page_links: false %>
   </div>
 
 
@@ -48,6 +49,7 @@
     arrow_correction();
 
     $(".search_todos").keyup(function() {
+      $('.todos').empty();
       $.ajax({
           type: 'GET',
           url: '/todos',
@@ -74,6 +76,24 @@
       };
     });
 
+    $('#active_status_active_only').attr("checked", true);
+
+    $('#active_status_active_only').click(function(){
+      if($(this).attr("checked") != "checked"){
+        $('.todos').empty();
+      };
+      $(this).attr("checked", true);
+      $('#active_status_inactive_only').attr("checked", false);
+    });
+
+    $('#active_status_inactive_only').click(function(){
+      if($(this).attr("checked") != "checked"){
+        $('.todos').empty();
+      };
+      $('#active_status_active_only').attr("checked", false);
+      $(this).attr("checked", true);
+    });
+
     $(function(){
      $('.pagination a').attr('data-remote', 'true');
     });
@@ -84,4 +104,11 @@
       ($('.up').parent()).first().addClass( "invisible" );
       ($('.down').parent()).last().addClass( "invisible" );
     }
+
+    $('.todos').on('scroll', function(){
+      if (Math.round($('.todos')[0].scrollHeight - $('.todos').scrollTop()) == $('.todos').outerHeight()){
+        $('.pagination .next_page')[0].click();
+      };
+    }).scroll();
+
   </script>

@@ -3,12 +3,13 @@ if (mode){
   $(".search_todos").val('');
 };
 
-
-$(".todos").html(`<% if @todos.empty? %><div class = "todo">
+$(".todos").append(`<% if @todos.empty? %><div class = "todo">
       <p>Nothing to show </p></div><% else %>
       <% @todos.each do |todo| %><%= render 'todo', todo: todo %>
-      <% end %><% end %>    <div class="digg_pagination">
+      <% end %><% end %> <div class="digg_pagination">
       <%= will_paginate @todos, page_links: false %></div>`);
+
+$(".digg_pagination").html(`<%= will_paginate @todos, page_links: false %>`);
 
 $('.pagination a').attr('data-remote', 'true');
 
@@ -23,7 +24,7 @@ else{
 $("#active_status_active_only").prop("checked", status1);
 $("#active_status_inactive_only").prop("checked", status2);
 
-arrow_correction();
+// arrow_correction();
 
 if ($(".search_todos").val()) {
   ($('.up').parent()).addClass( "invisible" );

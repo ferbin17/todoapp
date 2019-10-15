@@ -18,6 +18,7 @@ class TodosController < ApplicationController
           active_only : Todo.inactive_only)
       @todos = @todos.logged_user(current_user)
       @todos = @todos.paginate(:page => params[:page], per_page: 5)
+      respond_to :js
 
     else
       # Show all active todos at first loading

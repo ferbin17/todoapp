@@ -75,17 +75,17 @@
 	border-radius: 0 4px 4px 0;
 }
 
-// .todos {
-//   overflow-y: scroll;
-  // height: 200px;
-//   scrollbar-width: none;
-//   overflow: -moz-scrollbars-none;
-//   -ms-overflow-style: none;
-// }
-//
-// .todos::-webkit-scrollbar {
-//   width: 0 !important
-//  }
+.todos {
+  overflow-y: scroll;
+  height: 550px;
+  scrollbar-width: none;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+}
+
+.todos::-webkit-scrollbar {
+  width: 0 !important
+ }
 
 
 .todo {
@@ -184,29 +184,7 @@
 }
 
 .digg_pagination {
-  background: #E7E7E7;
-  cursor: default;
-  /* self-clearing method: */
-}
-.digg_pagination a, .digg_pagination span, .digg_pagination em {
-    padding: 0.2em 0.5em;
-    display: block;
-    float: left;
-    margin-right: 1px;
-}
-.digg_pagination .disabled {
-  color: #334A5F;
-  border: 1px solid #CBCBCB;
-}
-.digg_pagination a {
-  text-decoration: none;
-  color: #334A5F;
-  border: 1px solid #CBCBCB;
-}
-  .digg_pagination a:hover, .digg_pagination a:focus {
-    color: #000033;
-    border-color: #000033;
-    background: #F4F4F4;
+  display: none;
 }
 
 
@@ -214,8 +192,13 @@
   margin: 40px 0 20px 0;
 }
 
-.back-button {
+#back-button {
   text-decoration: none;
+  color: #404040;
+}
+
+#back-button:hover {
+  text-decoration: underline;
   color: #404040;
 }
 
@@ -227,7 +210,8 @@
 }
 
 .todo-full {
-  border: 1px solid #CBCBCB;
+  border-bottom: 1px solid #CBCBCB;
+  border-collapse: collapse;
   background-color: #FFFFFF;
   padding: 20px;
   background-color: white;
@@ -300,14 +284,12 @@
 
 .comments {
   padding: 0 10px 0 10px;
-  border: 1px solid #CBCBCB;
   background-color: #F4F4F4;
-  // background-color: #F4F4F4;
 }
 
 .comment {
   line-height: 1.5em;
-  padding: 10px;
+  padding: 15px 10px 10px 10px;
   border-bottom: 1px solid #CBCBCB;
   background-color: #F4F4F4;
 }
@@ -320,19 +302,24 @@
   color: #00BB9A;
 }
 
+.comment-user-time {
+  line-height: 0;
+  margin-bottom: 15px;
+}
+
 .comment-user {
-  display: inline-block;
   color: #334A5F;
   font-weight: bold;
+  max-width: 8.5%;
 }
 
 .comment-on {
-  display: inline-block;
   opacity: 0.5;
+  max-width: 0%;
+  padding-right: 10px;
 }
 
 .comment-time {
-  display: inline-block;
   opacity: 0.5;
 }
 

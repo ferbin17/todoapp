@@ -1,12 +1,21 @@
-<div class = "comment">
-  <div class = "comment-body" >
-    <% a = comment.body %>
-    <% a = a.scan(/([\w ]+) ([\d]+\%)/) %>
-    <p><%= a[0][0] %> <span class="green-text"><%= a[1][1] %></span><%= a[1][0] %> <span class="green-text"><%= a[1][1] %></span>.</p>
+<% unless comment.id.nil? %>
+  <div id = "<%= comment.id %>" class = "comment">
+    <div class = "comment-body" >
+      <% parsed_body = comment.body %>
+      <% if parsed_body.scan(/Done/) != [] %>
+        <% parsed_body = parsed_body.scan(/([\w ]+) (Done)$/) %>
+        <p><%= parsed_body[0][0] %> <span class="green-text"><%= parsed_body[0][1] %>.</p>
+      <% elsif parsed_body.scan(/([\w ]+) ([\d]+\%)/) != [] %>
+        <% parsed_body = parsed_body.scan(/([\w ]+) ([\d]+\%)/) %>
+        <p><%= parsed_body[0][0] %> <span class="green-text"><%= parsed_body[0][1] %></span><%= parsed_body[1][0] %> <span class="green-text"><%= parsed_body[1][1] %></span>.</p>
+      <% else %>
+        <p>"<%= comment.body %>"</p>
+      <% end %>
+    </div>
+    <div class = "comment-user-time row" >
+      <div class = "comment-user col-4"> <%= User.find(comment.user_id).name %> </div>
+      <div class= "comment-on  col-2"> on </div>
+      <div class = "comment-time  col-6" > <%= comment.created_at.strftime("%l.%M %P, %e %B %Y") %> </div>
+    </div>
   </div>
-  <div class = "comment-user-time" >
-    <p class = "comment-user"> <%= User.find(comment.user_id).name %> </p>
-    <p class= "comment-on"> &nbsp on &nbsp </p>
-    <p class = "comment-time" > <%= comment.created_at.strftime("%l.%M %P, %e %B %Y") %> </p>
-  </div>
-</div>
+<% end %>
