@@ -3,13 +3,13 @@
     <div class = "comment-body" >
       <% parsed_body = comment.body %>
       <% if parsed_body.scan(/Done/) != [] %>
-        <% parsed_body = parsed_body.scan(/([\w ]+) (Done)$/) %>
-        <p><%= parsed_body[0][0] %> <span class="green-text"><%= parsed_body[0][1] %>.</p>
+        <% parsed_body = parsed_body.scan(/(Status of the task changed to) (Done)$/) %>
+        <p><%= parsed_body[0][0] %> <span class="green-text"><%= parsed_body[0][1] %></p>
       <% elsif parsed_body.scan(/([\w ]+) ([\d]+\%)/) != [] %>
         <% parsed_body = parsed_body.scan(/([\w ]+) ([\d]+\%)/) %>
-        <p><%= parsed_body[0][0] %> <span class="green-text"><%= parsed_body[0][1] %></span><%= parsed_body[1][0] %> <span class="green-text"><%= parsed_body[1][1] %></span>.</p>
+        <p><%= parsed_body[0][0] %> <span class="green-text"><%= parsed_body[0][1] %></span><%= parsed_body[1][0] %> <span class="green-text"><%= parsed_body[1][1] %></span></p>
       <% else %>
-        <p>"<%= comment.body %>"</p>
+        <p>"<%= comment.body %>."</p>
       <% end %>
     </div>
     <div class = "comment-user-time row" >

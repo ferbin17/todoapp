@@ -19,7 +19,6 @@ class TodosController < ApplicationController
       @todos = @todos.logged_user(current_user)
       @todos = @todos.paginate(:page => params[:page], per_page: 5)
       respond_to :js
-
     else
       # Show all active todos at first loading
       @todos = get_todos(true)
@@ -31,8 +30,14 @@ class TodosController < ApplicationController
   def create
     body = { "body" => params[:create] }
     @todo = Todo.new(body.merge("user_id" => current_user.id))
+    top_todo = (Todo.active_only.logged_user(current_user).order(:updated_at).first)
     if @todo.save
-      Todo.update_position
+      if top_todo == nil
+        @todo.update(position: 1)
+      else
+
+        @todo.update(position: top_todo.position+1)
+      end
     end
 
     @todos = get_todos(true)
@@ -42,7 +47,6 @@ class TodosController < ApplicationController
   def destroy
     @todo = Todo.find(params[:id])
     @todo.destroy
-    Todo.update_position
 
     @todos = get_todos(@todo.active?)
 
@@ -58,9 +62,8 @@ class TodosController < ApplicationController
     @todo = Todo.find(params[:id])
     params[:active] == "true" ? @todo.update(active: false) : @todo.
         update(active: true)
-    if @todo.save
-      Todo.update_position
-    end
+
+    @todo.save
 
     @todos = get_todos(params[:active])
   end

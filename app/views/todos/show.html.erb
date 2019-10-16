@@ -85,10 +85,10 @@
     var newProgress = Math.round((xPosition/587)*100);
 
       if (newProgress == 100){
-        $(".comment-entry").val('Status of the task changed to Done.');
+        $(".comment-entry").val('Status of the task changed to Done');
       }
       else{
-        $(".comment-entry").val('Task has been updated from ' + currentProgress + '% to ' + newProgress + '%.');
+        $(".comment-entry").val('Task has been updated from ' + currentProgress + '% to ' + newProgress + '%');
       };
 
       if($(".comment-entry").val()){

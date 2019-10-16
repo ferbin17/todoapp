@@ -24,29 +24,19 @@ class Todo < ApplicationRecord
     case direction
     when "down"
       @todo = Todo.find(id)
-      @nexttodo = Todo.where("position < ? AND user_id = ?",@todo.position ,current_user.id).order(position: :desc).limit(1)
+      @nexttodo = Todo.where("position < ? AND user_id = ? AND active = ?", @todo.position, current_user.id, @todo.active?).order(position: :desc).limit(1)
       position = @nexttodo[0].position
       @nexttodo.update(position: @todo.position)
       @todo.update(position: position)
 
     when "up"
       @todo = Todo.find(id)
-      @nexttodo = Todo.where("position > ? AND user_id = ?",@todo.position ,current_user.id).order(position: :asc).limit(1)
+      @nexttodo = Todo.where("position > ? AND user_id = ? AND active = ?", @todo.position, current_user.id, @todo.active?).order(position: :asc).limit(1)
       position = @nexttodo[0].position
       @nexttodo.update(position: @todo.position)
       @todo.update(position: position)
     end
   end
 
-  #function to update position value with respect to posistion in descending order
-  private
-    def self.update_position
-      Todo.where(active: true).order(:updated_at).each.with_index(1) do |todo, index|
-        todo.update_column :position, index
-      end
 
-      Todo.where(active: false).order(:updated_at).each.with_index(10000) do |todo, index|
-        todo.update_column :position, index
-      end
-    end
 end

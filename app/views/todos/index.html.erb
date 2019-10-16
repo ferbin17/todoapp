@@ -9,7 +9,7 @@
   </div>
 
   <div class = "active-change">
-    <%= radio_button_tag :active_status, 'active_only', false, data: {url: :todos, remote: true, method: :get} %>
+    <%= radio_button_tag :active_status, 'active_only', false, data: {url: :todos, remote: true, method: :get } %>
       <label for="active_status_active_only">Active</label>
     <%= radio_button_tag :active_status, 'inactive_only', false, data: {url: :todos, remote: true, method: :get }%>
       <label for="active_status_inactive_only">Inactive</label>
@@ -26,12 +26,13 @@
       <% end %>
     <% end %>
   </div>
-  <div id = "loading_messgage">
+  <div class="loading-section invisible d-flex align-items-center">
+    <p>Loading...</p>
+    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
   </div>
   <div class="digg_pagination">
     <%= will_paginate @todos, page_links: false %>
   </div>
-
 
   <script>
 
@@ -76,14 +77,12 @@
       };
     });
 
-    $('#active_status_active_only').attr("checked", true);
-
     $('#active_status_active_only').click(function(){
       if($(this).attr("checked") != "checked"){
         $('.todos').empty();
       };
-      $(this).attr("checked", true);
       $('#active_status_inactive_only').attr("checked", false);
+      $(this).attr("checked", true);
     });
 
     $('#active_status_inactive_only').click(function(){
@@ -107,7 +106,15 @@
 
     $('.todos').on('scroll', function(){
       if (Math.round($('.todos')[0].scrollHeight - $('.todos').scrollTop()) == $('.todos').outerHeight()){
-        $('.pagination .next_page')[0].click();
+        $('.loading-section').removeClass("invisible");
+        $('.loading-section').addClass("visible");
+        if($('.todos').html()==""){
+        }else{
+          $('.pagination .next_page')[0].click();
+        }
+        if($('.pagination .next_page').hasClass('disabled')){
+          $('.loading-section').addClass("invisible");
+        }
       };
     }).scroll();
 
