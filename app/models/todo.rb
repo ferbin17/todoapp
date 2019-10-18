@@ -4,15 +4,15 @@ class Todo < ApplicationRecord
 
   belongs_to :user
 
-  # after_save :update_position
-  # after_destroy :update_position
+  has_many :shares
+  has_many :users, through: :shares, dependent: :destroy
 
   has_many :comments, dependent: :destroy
 
   scope :search, lambda { |like_keyword| where("body LIKE ?", like_keyword) }
   scope :logged_user, lambda { |current_user| where(user_id: current_user.id) }
-  scope :active_only, ->  { where(active: true).order(position: :desc) }
-  scope :inactive_only, -> { where(active: false).order(position: :desc) }
+  scope :active_only, ->  { where(active: true) }
+  scope :inactive_only, -> { where(active: false) }
 
   #function to sort todos with respect to posistion in descending order
   def self.sort
@@ -20,21 +20,27 @@ class Todo < ApplicationRecord
     return @todos.order(position: :desc)
   end
 
-  def self.move(direction, id, current_user)
+  def self.move(direction, current_todo, current_user)
+    @user = User.find(current_user.id)
     case direction
     when "down"
-      @todo = Todo.find(id)
-      @nexttodo = Todo.where("position < ? AND user_id = ? AND active = ?", @todo.position, current_user.id, @todo.active?).order(position: :desc).limit(1)
-      position = @nexttodo[0].position
-      @nexttodo.update(position: @todo.position)
-      @todo.update(position: position)
+      @nexttodo = Todo.joins(:shares).select("shares.*,todos.*").where("position < ? and shares.user_id= ? and todos.active=?", current_todo.position, current_user.id, current_todo.active?).order(:position).limit(1)
 
-    when "up"
-      @todo = Todo.find(id)
-      @nexttodo = Todo.where("position > ? AND user_id = ? AND active = ?", @todo.position, current_user.id, @todo.active?).order(position: :asc).limit(1)
+      current_todo = current_todo.shares.where(user_id: current_user.id)
+      @nexttodo = @nexttodo[0].shares.where(user_id: current_user.id)
+      #
       position = @nexttodo[0].position
-      @nexttodo.update(position: @todo.position)
-      @todo.update(position: position)
+      @nexttodo[0].update(position: current_todo[0].position)
+      current_todo[0].update(position: position)
+    when "up"
+      @nexttodo = Todo.joins(:shares).select("shares.*,todos.*").where("position > ? and shares.user_id= ? and todos.active=?", current_todo.position, current_user.id, current_todo.active?).order(:position).limit(1)
+
+      current_todo = current_todo.shares.where(user_id: current_user.id)
+      @nexttodo = @nexttodo[0].shares.where(user_id: current_user.id)
+
+      position = @nexttodo[0].position
+      @nexttodo[0].update(position: current_todo[0].position)
+      current_todo[0].update(position: position)
     end
   end
 

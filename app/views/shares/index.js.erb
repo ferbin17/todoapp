@@ -1,0 +1,10 @@
+$('.show-users').html(`<% unless @users.nil? %>
+    <% @users.each do |user| %>
+      <%= render 'shares/share', user: user %>
+    <% end %>
+   <% end %>`)
+
+<% @shares.each do |share| %>
+  $(".user-check-box #<%=share.id%>").attr("checked",true);
+  $(".user-check-box #<%=share.id%>").attr('value',true);
+<% end %>

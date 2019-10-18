@@ -1,6 +1,17 @@
-$('#T<%= j @todo.id %>').remove();
+var page = "<%= @page %>"
+if(page == "show"){
+  var status = $('#<%= j @todo.id %>').attr("data-url");
+  active = status.split("=");
+  if (active[1] == "true"){
+    $('#<%= j @todo.id %>').attr("data-url",active[0]+"=false")
+  }else{
+    $('#<%= j @todo.id %>').attr("data-url",active[0]+"=true")
+  };
+}else{
+  $('#T<%= j @todo.id %>').remove();
 
-$(".todo-entry").val('');
-$(".search_todos").val('');
+  $(".todo-entry").val('');
+  $(".search_todos").val('');
 
-arrow_correction();
+  arrow_correction();
+}

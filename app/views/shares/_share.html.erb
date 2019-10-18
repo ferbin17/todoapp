@@ -1,0 +1,11 @@
+
+<div id = "S<%= user.id %>" class = "user">
+  <div class = "row">
+    <div class = "user-check-box col-1" >
+      <%= check_box_tag "share", false, false, id: user.id %>
+    </div>
+    <div class = "user-name col-11" >
+      <%= user.name %>
+    </div>
+  </div>
+</div>

@@ -14,8 +14,8 @@
           <%= @todo.body %>
         </div>
         <div class = "close-button col-1" >
-          <%= link_to '<i class="icons material-icons">close</i>'.html_safe, @todo, method: :delete, data:{confirm: "Are you sure ?"}, class: "delete-todo",
-              :remote=> true %>
+            <%= link_to '<i class="icons material-icons">close</i>'.html_safe, @todo, method: :delete, data:{confirm: "Are you sure ?"}, class: "delete-todo",
+                :remote=> true %>
         </div>
       </div>
       <div class = "todo-det-time" >
@@ -31,15 +31,26 @@
           </div>
         </div>
         <div class = "col-1 round active-button">
-        <%= check_box_tag @todo.id, @todo.id, @todo.active,
-            data: {url: url_for(action: :update, active:@todo.active, id:@todo.id), :remote => true, method: :patch }%>
-            <label for="<%=@todo.id%>"></label>
+          <%= check_box_tag @todo.id, @todo.id, @todo.active,
+              data: {url: url_for(action: :update, active:@todo.active, id:@todo.id), :remote => true, method: :patch }%>
+              <label for="<%=@todo.id%>"></label>
         </div>
       </div>
       <div class = "share-section">
-        <p class= "shared-with">Shared with : &nbsp</p>
-        <p class = "shared-users">a</p><br>
-        <button type="button" name="button">Share this </button>
+        <div class= "shared-with">Shared with :
+          <% if @shared.empty? %>
+              <p class="shared-users">None</p>
+          <% else %>
+            <% @shared.each do |share| %>
+              <p class="shared-users"><%= User.find(share.user_id).name %></p>
+              <% unless share == @shared.last %>
+                <p class="shared-comma">,&nbsp</p>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+          <br>
+          <button id="share_button" type="button" name="show_share" onclick="on()">Share this </button>
       </div>
     </div>
     <div class = "comments">
@@ -53,9 +64,27 @@
   </div>
 </div>
 
+ <div id="overlay">
+   <div id="share-screen">
+     <div class="sharing-heading">
+       Add people to this Task
+     </div>
+     <div class="show-users">
+     </div>
+     <div class="option-buttons">
+       <button id="share_cancel_button" type="button" name="cancel_share" onclick="off()">Cancel</button>
+       <button id="share_savel_button" type="button" name="save_share" onclick="off()">Save</button>
+     </div>
+   </div>
+ </div>
 <script>
 
   var todo_id = <%= @todo.id %>;
+  var is_owner = <%= @todo.is_owner? %>;
+  
+  if (!is_owner){
+    $('.active-button, #share_button, .delete-todo').hide();
+  };
 
   if( $('.comment').length == 0) {
     $('.comments').css('border','none');
@@ -84,31 +113,49 @@
     var width = (((($(this).children())[0])["style"])["width"]);
     var newProgress = Math.round((xPosition/587)*100);
 
-      if (newProgress == 100){
-        $(".comment-entry").val('Status of the task changed to Done');
+    $.ajax({
+      type: 'POST',
+      url: '/todos/' + todo_id + '/comments',
+      data: { old_value: width, new_value: newProgress },
+      success: function(){
+          $('.progress-bar').css('width',newProgress+'%');
+          $('.progress-bar').attr('aria-valuenow',newProgress);
+          $('.progress-percent').text(newProgress+"%");
       }
-      else{
-        $(".comment-entry").val('Task has been updated from ' + currentProgress + '% to ' + newProgress + '%');
-      };
-
-      if($(".comment-entry").val()){
-        $.ajax({
-          type: 'POST',
-          url: '/todos/' + todo_id + '/comments',
-          data: {comment: $('.comment-entry').val(), new_value: newProgress},
-          success: function(){
-            if (width != newProgress+"%"){
-              $('.progress-bar').css('width',newProgress+'%');
-              $('.progress-bar').attr('aria-valuenow',newProgress);
-              $('.progress-percent').text(newProgress+"%");
-            }
-          }
-        });
-      };
-
+    });
   });
 
   $('.comment').removeClass( "last-comment" );
   $('.comment').last().addClass( "last-comment" );
+
+  $('#share_button').click(function(){
+      $.ajax({
+        type: 'GET',
+        url: '/shares/',
+        data: { id: todo_id }
+      });
+  });
+
+  $('#share_savel_button').click(function(){
+    var users = new Array();
+    $("input[name='share']:checked").each(function(i) {
+      users.push($(this).attr("id"));
+    });
+
+      $.ajax({
+        type: 'POST',
+        url: '/shares/',
+        data: { users: users, id: todo_id }
+      });
+  });
+
+
+  function on() {
+    document.getElementById("overlay").style.display = "block";
+  }
+
+  function off() {
+    document.getElementById("overlay").style.display = "none";
+  }
 
 </script>

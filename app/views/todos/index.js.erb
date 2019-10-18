@@ -17,8 +17,6 @@ $(".todos").append(`<% if @todos.empty? %><div class = "todo">
 }
 $(".digg_pagination").html(`<%= will_paginate @todos, page_links: false %>`);
 
-$('.loading-section').fadeOut();
-
 $('.pagination a').attr('data-remote', 'true');
 
 var empty = <%= @todos.empty? %>
