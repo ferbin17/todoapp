@@ -181,6 +181,8 @@
   $(".search_todos").keydown(function() {
     if (event.which == 27) {
       $(".search_todos").val('');
+      $('.todos').hide();
+      $('.todo-content').show();
     };
   });
 
