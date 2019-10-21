@@ -6,7 +6,9 @@
 <div class = "back-to-index" >
   <%= link_to '< Go back to home', root_path, :id => "back-button" %>
 </div>
-<div class = "content">
+<div class = "todos">
+</div>
+<div class="todo-content">
   <div class = 'todo-detailed' >
     <div class = "todo-full" >
       <div class = "row">
@@ -42,10 +44,8 @@
               <p class="shared-users">None</p>
           <% else %>
             <% @shared.each do |share| %>
-              <p class="shared-users"><%= User.find(share.user_id).name %></p>
-              <% unless share == @shared.last %>
-                <p class="shared-comma">,&nbsp</p>
-              <% end %>
+              <p class="shared-users"><%= share.name %></p>
+              <p class="shared-comma">,&nbsp</p>
             <% end %>
           <% end %>
         </div>
@@ -67,21 +67,23 @@
  <div id="overlay">
    <div id="share-screen">
      <div class="sharing-heading">
-       Add people to this Task
+       Add people to this task
      </div>
      <div class="show-users">
      </div>
      <div class="option-buttons">
-       <button id="share_cancel_button" type="button" name="cancel_share" onclick="off()">Cancel</button>
-       <button id="share_savel_button" type="button" name="save_share" onclick="off()">Save</button>
-     </div>
+      <button id="share_savel_button" type="button" name="save_share" onclick="off()">Save</button>
+      <button id="share_cancel_button" type="button" name="cancel_share" onclick="off()">Cancel</button>
+      </div>
    </div>
  </div>
 <script>
 
   var todo_id = <%= @todo.id %>;
   var is_owner = <%= @todo.is_owner? %>;
-  
+
+  $('.todos').hide();
+
   if (!is_owner){
     $('.active-button, #share_button, .delete-todo').hide();
   };
@@ -127,6 +129,7 @@
 
   $('.comment').removeClass( "last-comment" );
   $('.comment').last().addClass( "last-comment" );
+  $('.shared-comma').last().remove();
 
   $('#share_button').click(function(){
       $.ajax({
@@ -142,6 +145,10 @@
       users.push($(this).attr("id"));
     });
 
+    if(users.length == 0){
+      users.push(0);
+    }
+
       $.ajax({
         type: 'POST',
         url: '/shares/',
@@ -149,13 +156,39 @@
       });
   });
 
-
   function on() {
     document.getElementById("overlay").style.display = "block";
   }
 
   function off() {
     document.getElementById("overlay").style.display = "none";
+  }
+
+  $(".search_todos").keyup(function() {
+    if (event.which != 27) {
+      $.ajax({
+          type: 'GET',
+          url: '/todos',
+          data: {search: $(this).val()}
+      });
+      $('.todos').empty();
+      $('.todo-content').hide();
+      $('.todos').show();
+    };
+  });
+
+
+  $(".search_todos").keydown(function() {
+    if (event.which == 27) {
+      $(".search_todos").val('');
+    };
+  });
+
+  function arrow_correction(){
+    ($('.up').parent()).removeClass( "invisible" );
+    ($('.down').parent()).removeClass( "invisible" );
+    ($('.up').parent()).first().addClass( "invisible" );
+    ($('.down').parent()).last().addClass( "invisible" );
   }
 
 </script>

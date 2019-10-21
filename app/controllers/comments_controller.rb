@@ -4,9 +4,9 @@ class CommentsController < ApplicationController
 
   def create
     @todo = Todo.find(params[:todo_id])
-    @shares = User.joins(:shares).select("users.id").where("shares.todo_id=? AND shares.is_owner=false", params[:todo_id])
+    @shares = Share.select("shares.user_id").where("shares.todo_id=?", params[:todo_id])
     @shares.each do |share|
-      if share.id == current_user.id
+      if share.user_id == current_user.id
         if params.key?(:comment)
           comment = { "body" => "\"#{params[:comment]}\"" }
         else
@@ -21,6 +21,7 @@ class CommentsController < ApplicationController
         end
           @comment = @todo.comments.new(comment.merge("user_id" => current_user.id))
         if @comment.save
+          @comment = Comment.joins(:user).select('users.*,comments.*').where("comments.todo_id = ? and comments.id=?", @todo.id, @comment.id)[0]
           if params.key?(:new_value)
             @todo.update(completion_status: params[:new_value]);
             @todo.save
@@ -29,7 +30,8 @@ class CommentsController < ApplicationController
       end
     end
 
-    @comments = @todo.comments
   end
+
+
 
 end

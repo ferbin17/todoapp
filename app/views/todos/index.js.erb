@@ -5,15 +5,20 @@ if (active_status){
 
 var search =  <%= params.key?(:search) %>;
 if(search){
-$(".todos").html(`<% if @todos.empty? %><div class = "todo">
+  $(".todos").html(`<% if @todos.empty? %><div class = "todo">
+          <p>Nothing to show </p></div><% else %>
+          <% @todos.each do |todo| %><%= render 'todo', todo: todo %>
+          <% end %><% end %>`);
+}else{
+  $(".todos").append(`<% if @todos.empty? %><div class = "todo">
         <p>Nothing to show </p></div><% else %>
         <% @todos.each do |todo| %><%= render 'todo', todo: todo %>
         <% end %><% end %>`);
-}else{
-$(".todos").append(`<% if @todos.empty? %><div class = "todo">
-      <p>Nothing to show </p></div><% else %>
-      <% @todos.each do |todo| %><%= render 'todo', todo: todo %>
-      <% end %><% end %>`);
+}
+
+if(("<%= params[:search]%>" == "") && ("<%= @page %>" == "show")){
+  $('.todos').hide();
+  $('.todo-content').show();
 }
 $(".digg_pagination").html(`<%= will_paginate @todos, page_links: false %>`);
 

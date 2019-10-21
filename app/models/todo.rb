@@ -9,8 +9,9 @@ class Todo < ApplicationRecord
 
   has_many :comments, dependent: :destroy
 
+  scope :user_shared_todos, lambda { |current_user| Todo.joins(:shares).select("shares.*,todos.*").where("shares.user_id= ?", current_user.id).order(position: :desc) }
+  scope :user_shared_partial_todos, lambda { |active_status, current_user| Todo.joins(:shares).select("shares.*,todos.*").where("todos.active=? and shares.user_id= ?", active_status, current_user.id).order(position: :desc) } 
   scope :search, lambda { |like_keyword| where("body LIKE ?", like_keyword) }
-  scope :logged_user, lambda { |current_user| where(user_id: current_user.id) }
   scope :active_only, ->  { where(active: true) }
   scope :inactive_only, -> { where(active: false) }
 
