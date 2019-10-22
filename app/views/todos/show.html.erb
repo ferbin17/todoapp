@@ -165,7 +165,11 @@
   }
 
   $(".search_todos").keyup(function() {
-    if (event.which != 27) {
+    if($(this).val() == ''){
+      $('.todos').empty();
+      $('.todos').hide();
+      $('.todo-content').show();
+    }else{
       $.ajax({
           type: 'GET',
           url: '/todos',
@@ -181,8 +185,6 @@
   $(".search_todos").keydown(function() {
     if (event.which == 27) {
       $(".search_todos").val('');
-      $('.todos').hide();
-      $('.todo-content').show();
     };
   });
 

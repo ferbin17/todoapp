@@ -16,10 +16,6 @@ if(search){
         <% end %><% end %>`);
 }
 
-if(("<%= params[:search]%>" == "") && ("<%= @page %>" == "show")){
-  $('.todos').hide();
-  $('.todo-content').show();
-}
 $(".digg_pagination").html(`<%= will_paginate @todos, page_links: false %>`);
 
 $('.pagination a').attr('data-remote', 'true');

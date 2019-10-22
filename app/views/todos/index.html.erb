@@ -107,10 +107,10 @@
 
     $('.todos').on('scroll', function(){
       if (Math.round($('.todos')[0].scrollHeight - $('.todos').scrollTop()) == $('.todos').outerHeight()){
-        $('.loading-section').removeClass("invisible");
-        $('.loading-section').addClass("visible");
-        if($('.todos').html()==""){
+        if(($('.todos').html() == "") || ($('.pagination .next_page').length == 0)){
         }else{
+          $('.loading-section').removeClass("invisible");
+          $('.loading-section').addClass("visible");
           $('.pagination .next_page')[0].click();
         }
         if($('.pagination .next_page').hasClass('disabled')){
