@@ -30,6 +30,7 @@
             <div class="progress-bar" role="progressbar" style="width:<%= @todo.completion_status %>%" aria-valuenow="<%= @todo.completion_status %>" aria-valuemin="0" aria-valuemax="100">
               <span class="progress-percent"><%= @todo.completion_status %>%</span>
             </div>
+            <div class="show_pointer">0</div>
           </div>
         </div>
         <div class = "col-1 round active-button">
@@ -115,16 +116,18 @@
     var width = (((($(this).children())[0])["style"])["width"]);
     var newProgress = Math.round((xPosition/587)*100);
 
-    $.ajax({
-      type: 'POST',
-      url: '/todos/' + todo_id + '/comments',
-      data: { old_value: width, new_value: newProgress },
-      success: function(){
-          $('.progress-bar').css('width',newProgress+'%');
-          $('.progress-bar').attr('aria-valuenow',newProgress);
-          $('.progress-percent').text(newProgress+"%");
-      }
-    });
+    if(newProgress >= 0){
+      $.ajax({
+        type: 'POST',
+        url: '/todos/' + todo_id + '/comments',
+        data: { old_value: width, new_value: newProgress },
+        success: function(){
+            $('.progress-bar').css('width',newProgress+'%');
+            $('.progress-bar').attr('aria-valuenow',newProgress);
+            $('.progress-percent').text(newProgress+"%");
+        }
+      });
+    }
   });
 
   $('.comment').removeClass( "last-comment" );
@@ -192,5 +195,31 @@
     ($('.up').parent()).first().hide();
     ($('.down').parent()).last().hdie();
   }
+
+  $('.progress').mousemove(function(event){
+
+    var currentProgress = $('.progress-bar').attr('aria-valuenow');
+    var xPosition = event.pageX - $(this).offset().left;
+
+    var width = (((($(this).children())[0])["style"])["width"]);
+    var newProgress = Math.round((xPosition/587)*100);
+
+    if(newProgress >= 0 && newProgress <= 100){
+      if(newProgress == -0){
+        newProgress = 0
+      }
+      $('.progress .show_pointer').text(newProgress)
+    }
+  });
+
+  var tooltips = document.querySelectorAll('.progress .show_pointer');
+  window.onmousemove = function (e) {
+      var x = (e.clientX + 20) + 'px',
+          y = (e.clientY + 20) + 'px';
+      for (var i = 0; i < tooltips.length; i++) {
+          tooltips[i].style.top = y;
+          tooltips[i].style.left = x;
+      }
+  };
 
 </script>

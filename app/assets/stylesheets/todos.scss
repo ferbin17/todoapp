@@ -274,6 +274,19 @@
   font-weight: bold;
 }
 
+.show_pointer {
+  font-weight: bold;
+}
+
+.progress .show_pointer {
+    display:none;
+}
+.progress:hover .show_pointer {
+    display:block;
+    position:fixed;
+    overflow:hidden;
+}
+
 .active-button {
   top: 25px;
 }
