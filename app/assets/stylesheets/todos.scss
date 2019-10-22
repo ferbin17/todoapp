@@ -275,6 +275,12 @@
 }
 
 .show_pointer {
+  width: auto;
+  background-color: lightgrey;
+  color: #000;
+  text-align: center;
+  border-radius: 5px;
+  padding: 2px 5px;
   font-weight: bold;
 }
 
