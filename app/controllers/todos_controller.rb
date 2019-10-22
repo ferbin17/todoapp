@@ -5,8 +5,6 @@ class TodosController < ApplicationController
   #index
   def index
     if params.key?(:search)
-      url = Rails.application.routes.recognize_path(request.referrer)
-      @page = url[:action]
       # Searching todo
       like_keyword = "%#{params[:search]}%"
       @todos = ( like_keyword == "%%" ? Todo.user_shared_partial_todos(true, current_user) : Todo.

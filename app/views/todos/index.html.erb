@@ -18,7 +18,7 @@
   <div class = "todos">
     <% if @todos.empty? %>
       <div class = "todo">
-        <p>Nothing to show </p>
+        Nothing to show
       </div>
     <% else %>
       <% @todos.each do |todo| %>
@@ -119,6 +119,5 @@
         }
       };
     }).scroll();
-    // TODO: pagination next_page showing error on empty todos
 
   </script>
