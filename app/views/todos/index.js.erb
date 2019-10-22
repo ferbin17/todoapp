@@ -1,7 +1,9 @@
 var active_status = <%= params.key?(:active_status) %>;
 if (active_status){
   $(".search_todos").val('');
-};
+}else{
+  $('.todos').empty();
+}
 
 $(".todos").append(`<% if @todos.empty? %><div class = "todo">
     Nothing to show</div><% else %>
