@@ -3,18 +3,10 @@ if (active_status){
   $(".search_todos").val('');
 };
 
-var search =  <%= params.key?(:search) %>;
-if(search){
-  $(".todos").html(`<% if @todos.empty? %><div class = "todo">
-          <p>Nothing to show </p></div><% else %>
-          <% @todos.each do |todo| %><%= render 'todo', todo: todo %>
-          <% end %><% end %>`);
-}else{
-  $(".todos").append(`<% if @todos.empty? %><div class = "todo">
-        <p>Nothing to show </p></div><% else %>
-        <% @todos.each do |todo| %><%= render 'todo', todo: todo %>
-        <% end %><% end %>`);
-}
+$(".todos").append(`<% if @todos.empty? %><div class = "todo">
+    Nothing to show</div><% else %>
+      <% @todos.each do |todo| %><%= render 'todo', todo: todo %>
+      <% end %><% end %>`);
 
 $(".digg_pagination").html(`<%= will_paginate @todos, page_links: false %>`);
 
@@ -34,6 +26,6 @@ $("#active_status_inactive_only").prop("checked", status2);
 arrow_correction();
 
 if ($(".search_todos").val()) {
-  ($('.up').parent()).addClass( "invisible" );
-  ($('.down').parent()).addClass( "invisible" );
+  ($('.up').parent()).hide();
+  ($('.down').parent()).hide();
 };

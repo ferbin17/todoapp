@@ -18,7 +18,7 @@
   <div class = "todos">
     <% if @todos.empty? %>
       <div class = "todo">
-        <p>Nothing to show </p>
+        Nothing to show
       </div>
     <% else %>
       <% @todos.each do |todo| %>
@@ -26,9 +26,15 @@
       <% end %>
     <% end %>
   </div>
-  <div class="loading-section invisible d-flex align-items-center">
-    <p>Loading...</p>
-    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+  <div class="row loading">
+    <div class="col-11">
+      <div class="loading-section align-items-center">
+        <p>Loading...</p>
+      </div>
+    </div>
+    <div class="col-1">
+        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+    </div>
   </div>
   <div class="digg_pagination">
     <%= will_paginate @todos, page_links: false %>
@@ -95,30 +101,25 @@
 
     $(function(){
      $('.pagination a').attr('data-remote', 'true');
-     $('.loading-section').addClass("invisible");
+     $('.loading').hide();
     });
 
     function arrow_correction(){
-      ($('.up').parent()).removeClass( "invisible" );
-      ($('.down').parent()).removeClass( "invisible" );
-      ($('.up').parent()).first().addClass( "invisible" );
-      ($('.down').parent()).last().addClass( "invisible" );
+      ($('.up').parent()).first().hide();
+      ($('.down').parent()).last().hide();
     }
 
     $('.todos').on('scroll', function(){
       if (Math.round($('.todos')[0].scrollHeight - $('.todos').scrollTop()) == $('.todos').outerHeight()){
         if(($('.todos').html() == "") || ($('.pagination .next_page').length == 0)){
         }else{
-          $('.loading-section').removeClass("invisible");
-          $('.loading-section').addClass("visible");
+          $('.loading').show();
           $('.pagination .next_page')[0].click();
         }
         if($('.pagination .next_page').hasClass('disabled')){
-          $('.loading-section').removeClass("visible")
-          $('.loading-section').addClass("invisible");
+          $('.loading').hide();
         }
       };
     }).scroll();
-    // TODO: pagination next_page showing error on empty todos
 
   </script>
