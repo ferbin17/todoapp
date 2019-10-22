@@ -12,6 +12,7 @@
   width: 30%;
   color: #334A5F;
   caret-color: #334A5F;
+  margin: 3px;
 }
 
 .entry-box {
@@ -33,7 +34,7 @@
 .active-change {
 	display: flex;
 	overflow: hidden;
-  margin-bottom: 20px;
+  margin: 30px 0 0 0;
 }
 
 .active-change input {
@@ -182,12 +183,38 @@
   opacity: 1;
 }
 
+.digg_pagination {
+  display: none;
+}
+
+.loading-section {
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+.loading-section p {
+  color: #334A5F;
+  margin-top: 15px;
+}
+
+.spinner-border {
+  width: 1rem;
+  height: 1rem;
+  color: #334A5F;
+  margin-top: 20px;
+}
+
 .back-to-index {
   margin: 40px 0 20px 0;
 }
 
-.back-button {
+#back-button {
   text-decoration: none;
+  color: #404040;
+}
+
+#back-button:hover {
+  text-decoration: underline;
   color: #404040;
 }
 
@@ -199,7 +226,8 @@
 }
 
 .todo-full {
-  border: 1px solid #CBCBCB;
+  border-bottom: 1px solid #CBCBCB;
+  border-collapse: collapse;
   background-color: #FFFFFF;
   padding: 20px;
   background-color: white;
@@ -248,76 +276,4 @@
 
 .active-button {
   top: 25px;
-}
-
-.share-section {
-  margin-top: 10px;
-}
-
-.share-section button {
-  border: 1px solid #989898;
-  border-radius: 3px;
-  background-color: #FEFFFF;
-}
-
-.shared-with{
-  color: #989898;
-  display: inline-block;
-}
-
-.shared-users {
-  display: inline-block;
-  color: #334A5F;
-}
-
-.comments {
-  padding: 0 10px 0 10px;
-  border: 1px solid #CBCBCB;
-  background-color: #F4F4F4;
-  // background-color: #F4F4F4;
-}
-
-.comment {
-  line-height: 1.5em;
-  padding: 10px;
-  border-bottom: 1px solid #CBCBCB;
-  background-color: #F4F4F4;
-}
-
-.comment-body {
-  color: #334A5F;
-}
-
-.comment-user {
-  display: inline-block;
-  color: #334A5F;
-  font-weight: bold;
-}
-
-.comment-on {
-  display: inline-block;
-  opacity: 0.5;
-}
-
-.comment-time {
-  display: inline-block;
-  opacity: 0.5;
-}
-
-.last-comment {
-  border-bottom: none;
-}
-
-.new-comment {
-  margin: 25px 0;
-}
-
-.new-comment input {
-  border: 1px solid #CBCBCB;
-  border-radius: 4px;
-  padding: 10px 20px 10px 20px;
-  align-content: center;
-  vertical-align: middle;
-  width: 100%;
-  line-height: 2em;
 }

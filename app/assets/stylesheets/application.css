@@ -14,6 +14,7 @@
  *= require_self
  */
 
+
 body {
   background-color: #E7E7E7;
 }
@@ -42,6 +43,6 @@ body {
 }
 
 .icon-section {
-  margin: 25px 0 0 0 ;
+  margin: 10px 0 0 0 ;
   text-align: center;
 }

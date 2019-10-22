@@ -1,0 +1,145 @@
+// Place all the styles related to the shares controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.share-section {
+  display: inline;
+  margin-top: 10px;
+}
+
+.share-section button {
+  border: 1px solid #989898;
+  border-radius: 3px;
+  background-color: #FEFFFF;
+}
+
+.shared-with {
+  color: #989898;
+  display: inline-block;
+  line-height: 0;
+}
+
+.shared-users {
+  display: inline-block;
+  color: #334A5F;
+  font-weight: 400;
+}
+
+.shared-comma {
+  display: inline;
+}
+
+#overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: none; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+
+#share-screen{
+  padding: 25px;
+  position: absolute;
+  width: 40%;
+  top:50%;
+  left:50%;
+  font-size: 20px;
+  color: black;
+  background-color: white;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+}
+
+.sharing-heading {
+  padding: 0px 0 10px 0;
+  color: #334A5F;
+  border-bottom: 1px solid #CBCBCB;
+}
+
+.show-users {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px 0 10px 0;
+  color: #334A5F;
+  border-bottom: 1px solid #CBCBCB;
+  line-height: 2.5rem;
+  font-size: 16px;
+}
+
+.user {
+  width: 30%;
+  float: left;
+}
+
+.user:nth-child(3n+2){
+  width: 40%;
+}
+
+.user input[type="checkbox"] {
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #CACACA;
+  border-radius: 2px;
+  box-sizing: border-box;
+  position: relative;
+  box-sizing: content-box ;
+  width: 17px;
+  height: 17px;
+  border-width: 0;
+  transition: all .3s linear;
+}
+
+.user input[type="checkbox"]:focus{
+  outline: 0 none;
+  box-shadow: none;
+}
+
+.user input[type="checkbox"]:checked{
+  background-color: #00B697;
+  border-color:  #ffffff;
+}
+
+.user input[type="checkbox"]:checked:after {
+    opacity: 1;
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 5px;
+    background: transparent;
+    top: 5px;
+    left: 4px;
+    border: 2px solid #ffffff;
+    border-top: none;
+    border-right: none;
+
+    transform: rotate(-45deg);
+}
+
+.option-buttons {
+  padding: 15px 0 0px 0;
+  text-align: right;
+}
+
+#share_savel_button {
+  font-weight: bold;
+  margin: 0 20px 0 20px;
+  padding: 0 20px 0 20px;
+  border: 1px solid #989898;
+  border-radius: 3px;
+  background-color: #FEFFFF;
+}
+#share_cancel_button {
+  border: none;
+  padding: 0;
+  margin: 0 auto;
+  background: none;
+  text-decoration: underline;
+}

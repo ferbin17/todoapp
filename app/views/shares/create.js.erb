@@ -1,0 +1,11 @@
+$('.shared-with').html(`Shared with :
+  <% if @shares.empty? %>
+      <p class="shared-users">None</p>
+  <% else %>
+    <% @shares.each do |share| %>
+      <p class="shared-users"><%= share.name %></p>
+      <p class="shared-comma">,&nbsp</p>
+    <% end %>
+  <% end %>`)
+
+$('.shared-comma').last().remove();
