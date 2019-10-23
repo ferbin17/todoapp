@@ -28,7 +28,6 @@ class TodosController < ApplicationController
 
   #function for crating new todos
   def create
-    # TODO: change to call backs
     body = { "body" => params[:create] }
     @todo = Todo.new(body.merge("user_id" => current_user.id))
     if @todo.save
@@ -90,7 +89,7 @@ class TodosController < ApplicationController
   #funtion for showing each individual todo
   def show
     @todo = Todo.user_shared_todos(current_user).where(id: params[:id])[0]
-    @shared = User.joins(:shares).select("users.*,shares.*").where("shares.todo_id = ? and shares.user_id != ?", @todo.id, @todo.user_id) # TODO: current_user id or owner id
+    @shared = User.joins(:shares).select("users.*,shares.*").where("shares.todo_id = ? and shares.user_id != ?", @todo.id, @todo.user_id)
 
     @comments = User.joins(:comments).select('comments.*,users.*').where("comments.todo_id = ?", @todo.id)
   end

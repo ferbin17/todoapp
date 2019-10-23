@@ -233,6 +233,10 @@
   background-color: white;
 }
 
+.comment-body {
+  word-wrap: break-word;
+}
+
 .close-button {
   padding-left: 20px;
   text-align: right;
@@ -275,6 +279,12 @@
 }
 
 .show_pointer {
+  width: auto;
+  background-color: lightgrey;
+  color: #000;
+  text-align: center;
+  border-radius: 5px;
+  padding: 2px 5px;
   font-weight: bold;
 }
 
