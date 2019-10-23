@@ -2,8 +2,9 @@ class CommentsController < ApplicationController
 
   respond_to :html, :js
 
+  #checks the privilage of user and creates comment
   def create
-    @todo = Todo.find(params[:todo_id])
+    @todo = Todo.find_by(id: params[:todo_id])
     @shares = Share.select("shares.user_id").where("shares.todo_id=?", params[:todo_id])
     @shares.each do |share|
       if share.user_id == current_user.id

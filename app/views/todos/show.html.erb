@@ -35,7 +35,7 @@
         </div>
         <div class = "col-1 round active-button">
           <%= check_box_tag @todo.id, @todo.id, @todo.active,
-              data: {url: url_for(action: :update, active:@todo.active, id:@todo.id), :remote => true, method: :patch }%>
+              data: {url: url_for(action: :update, id:@todo.id), :remote => true, method: :patch }%>
               <label for="<%=@todo.id%>"></label>
         </div>
       </div>
@@ -195,7 +195,7 @@
     $('.up').parent().show();
     $('.down').parent().show();
     ($('.up').parent()).first().hide();
-    ($('.down').parent()).last().hdie();
+    ($('.down').parent()).last().hide();
   }
 
   $('.progress').mousemove(function(event){

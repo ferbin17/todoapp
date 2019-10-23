@@ -28,7 +28,7 @@
         <div class = "col-1 options round">
           <% if todo.is_owner? %>
             <%= check_box_tag todo.id, todo.id, todo.active,
-                data: {url: url_for(action: :update, active:todo.active, id:todo.id), :remote => true, method: :patch } %>
+                data: {url: url_for(action: :update, id:todo.id), :remote => true, method: :patch } %>
                 <label for="<%=todo.id%>"></label>
             <% end %>
         </div>

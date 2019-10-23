@@ -2,20 +2,22 @@ class SharesController < ApplicationController
 
   respond_to :html, :js
 
+  #shows all the users with check for shared users on share button click
   def index
-    @todo = Todo.find(params[:id])
+    @todo = Todo.find_by(id: params[:id])
     @users =  User.all.where("id != ?", @todo.user_id)
-    @shares = Share.select('user_id').where("todo_id=? AND is_owner=false", params[:id]).order(:user_id)
+    @shares = Share.select_iser_id.shared_users(params[:id])
     respond_to :js
   end
 
+  #add or remove new users as shared users for a particular todo
   def create
-    @shares = Share.select('user_id').where("todo_id=? AND is_owner=false", params[:id]).order(:user_id)
+    @shares = Share.select_iser_id.shared_users(params[:id])
     @users = params[:users]
     @users.each do |user|
       break if user == "0"
       if @shares.find_by(user_id: user) == nil
-        @user = User.find(user)
+        @user = User.find_by(id: user)
         top_todo = (@user.shares.order(:position)).last
         if top_todo == nil
           Share.create(user_id: user, todo_id: params[:id], position: 1)
@@ -29,7 +31,7 @@ class SharesController < ApplicationController
        (Share.find_by(user_id: share.user_id, todo_id: params[:id])).destroy
       end
     end
-    @shares = User.joins(:shares).select('users.*,shares.*').where("todo_id=? AND is_owner=false", params[:id]).order(:user_id)
+    @shares = User.joins(:shares).select('users.*,shares.*').shared_users(params[:id])
   end
 
 end

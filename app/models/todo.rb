@@ -9,10 +9,13 @@ class Todo < ApplicationRecord
 
   has_many :comments, dependent: :destroy
 
-  scope :user_shared_todos, lambda { |current_user| Todo.joins(:shares).select("shares.*,todos.*").where("shares.user_id= ?", current_user.id).order(position: :desc) }
-  scope :user_shared_partial_todos, lambda { |active_status, current_user| Todo.joins(:shares).select("shares.*,todos.*").where("todos.active=? and shares.user_id= ?", active_status, current_user.id).order(position: :desc) }
-  scope :previous_todo, lambda { |current_todo, current_user| Todo.joins(:shares).select("shares.*,todos.*").where("position < ? and shares.user_id= ? and todos.active=?", current_todo.position, current_user.id, current_todo.active?).order(position: :desc).limit(1) }
-  scope :next_todo, lambda { |current_todo, current_user| Todo.joins(:shares).select("shares.*,todos.*").where("position > ? and shares.user_id= ? and todos.active=?", current_todo.position, current_user.id, current_todo.active?).order(position: :asc).limit(1) }
+  scope :todo_join_shares, ->  { joins(:shares).select("shares.*,todos.*") }
+  scope :active_inactive, lambda { |active_status| where("todos.active=?",active_status) }
+  scope :user_shared_todos, lambda { |current_user| todo_join_shares.where("shares.user_id= ?", current_user.id).order(position: :desc) }
+  scope :user_shared_partial_todos, lambda { |active_status, current_user| todo_join_shares.active_inactive( active_status).where("shares.user_id= ?", current_user.id).order(position: :desc) }
+  scope :previous_todo, lambda { |current_todo, current_user| todo_join_shares.user_shared_todos(current_user).active_inactive( current_todo.active?).where("position < ?", current_todo.position).order(position: :desc).limit(1) }
+  scope :next_todo, lambda { |current_todo, current_user| todo_join_shares.user_shared_todos(current_user).active_inactive(current_todo.active?).where("position > ?", current_todo.position).order(position: :asc).limit(1) }
+  scope :logged_user, lambda { |current_user| where(user_id: current_user.id) }
   scope :search, lambda { |like_keyword| where("body LIKE ?", like_keyword) }
   scope :active_only, ->  { where(active: true) }
   scope :inactive_only, -> { where(active: false) }
@@ -24,7 +27,7 @@ class Todo < ApplicationRecord
   end
 
   def self.move(direction, current_todo, current_user)
-    @user = User.find(current_user.id)
+    @user = User.find_by(id: current_user.id)
     case direction
     when "down"
       @nexttodo = Todo.previous_todo(current_todo, current_user)

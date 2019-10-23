@@ -9,4 +9,6 @@ class User < ApplicationRecord
 
   has_many :todos, dependent: :destroy
   has_many :comments, dependent: :destroy
+
+  scope :shared_users, lambda { |id| where("todo_id=? AND is_owner=false", id).order(:user_id) }
 end
