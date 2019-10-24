@@ -26,7 +26,7 @@ class TodosController < ApplicationController
     @todo = Todo.find_by(id: params[:id])
     @todo.destroy
 
-    @todos = Todo.user_shared_partial_todos(todo.active?, current_user)
+    @todos = Todo.user_shared_partial_todos(@todo.active?, current_user)
 
     url = Rails.application.routes.recognize_path(request.referrer)
     if url[:action] == "show"
@@ -42,7 +42,7 @@ class TodosController < ApplicationController
     @page = url[:action]
 
     @todo = Todo.find_by(id: params[:id])
-    @todo.update(active: !todo.active?)
+    @todo.update(active: !@todo.active?)
     @todo.save
 
     @todos = Todo.user_shared_partial_todos(params[:active], current_user)
