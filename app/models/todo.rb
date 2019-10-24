@@ -20,10 +20,45 @@ class Todo < ApplicationRecord
   scope :active_only, ->  { where(active: true) }
   scope :inactive_only, -> { where(active: false) }
 
-  #function to sort todos with respect to posistion in descending order
-  def self.sort
-    @todos = Todo.all
-    return @todos.order(position: :desc)
+  def self.find_mode_and_return_todos(params, current_user)
+    if params.key?(:search)
+      return search_todo(params[:search], current_user)
+    else
+      return active_or_inactive_todos(params[:active_status], current_user)
+    end
+  end
+
+
+  # Searching todo, returns all active todos if keyword is not present else returns the search results
+  def self.search_todo(search_key, current_user)
+    like_keyword = "%#{search_key}%"
+    return like_keyword == "%%" ? Todo.user_shared_partial_todos(true, current_user) : Todo.
+        user_shared_todos(current_user).search(like_keyword)
+  end
+
+
+  # returns either all active todos or all inactive_only todos
+  def self.active_or_inactive_todos(active_status, current_user)
+    return active_status == "active_only" ?
+      Todo.user_shared_partial_todos(true, current_user) :
+      Todo.user_shared_partial_todos(false, current_user)
+  end
+
+  def self.create_entry_in_todo(params, current_user)
+    body = { "body" => params[:create] }
+    todo = Todo.new(body.merge("user_id" => current_user.id))
+    if todo.save
+      create_entry_in_share(todo, current_user)
+      return Todo.user_shared_partial_todos(true, current_user).where(id: todo.id)[0]
+    end
+  end
+
+  def self.create_entry_in_share(todo, current_user)
+    share = Share.new("user_id" => current_user.id, "todo_id" => todo.id, is_owner: true)
+    if share.save
+      position = find_last_position(current_user.id)
+      share.update(position: position)
+    end
   end
 
   def self.move(direction, current_todo, current_user)
@@ -48,6 +83,13 @@ class Todo < ApplicationRecord
       @nexttodo[0].update(position: current_todo[0].position)
       current_todo[0].update(position: position)
     end
+  end
+
+  def self.find_last_position(user_id)
+    user = User.find_by(id: user_id)
+    top_todo = (user.shares.order(:position)).last
+    return 1 if top_todo == nil
+    return top_todo.position+1
   end
 
 
