@@ -7,12 +7,14 @@ class Share < ApplicationRecord
   scope :select_user_id, lambda { select('user_id') }
   scope :create_share_entry, lambda { |user_id, todo_id, position| create(user_id: user_id, todo_id: todo_id, position: position) }
 
+  #function to manage share entries
   def self.manage_share(params)
     shared = Share.select_user_id.shared_users(params[:id])
     create_entry_to_share(shared, params)
     remove_entry_from_share(shared, params)
   end
 
+  #function to make new share entry
   def self.create_entry_to_share(shared, params)
     users = params[:users]
     users.each do |user_id|
@@ -24,6 +26,7 @@ class Share < ApplicationRecord
     end
   end
 
+  #function to remove share entry
   def self.remove_entry_from_share(shared, params)
     users = params[:users]
     shared.each do |share|
@@ -33,6 +36,7 @@ class Share < ApplicationRecord
     end
   end
 
+  #function to find last todos position of a user
   def self.find_last_position(user_id)
     user = User.find_by(id: user_id)
     top_todo = (user.shares.order(:position)).last

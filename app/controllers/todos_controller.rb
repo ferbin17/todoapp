@@ -4,6 +4,7 @@ class TodosController < ApplicationController
 
   #index
   def index
+    #calls mode function to return todos when params has either search or active status params
     if params.key?(:search) || params.key?(:active_status)
       todos = Todo.find_mode_and_return_todos(params, current_user)
       @todos = todos.paginate(:page => params[:page], per_page: 5)

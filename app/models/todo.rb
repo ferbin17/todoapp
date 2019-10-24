@@ -20,6 +20,7 @@ class Todo < ApplicationRecord
   scope :active_only, ->  { where(active: true) }
   scope :inactive_only, -> { where(active: false) }
 
+  #function to todos with respect to their params
   def self.find_mode_and_return_todos(params, current_user)
     if params.key?(:search)
       return search_todo(params[:search], current_user)
@@ -44,6 +45,7 @@ class Todo < ApplicationRecord
       Todo.user_shared_partial_todos(false, current_user)
   end
 
+  #function to create a entry in todo table
   def self.create_entry_in_todo(params, current_user)
     body = { "body" => params[:create] }
     todo = Todo.new(body.merge("user_id" => current_user.id))
@@ -53,6 +55,7 @@ class Todo < ApplicationRecord
     end
   end
 
+  #function to create a entry in share table on successfull todo entry creation
   def self.create_entry_in_share(todo, current_user)
     share = Share.new("user_id" => current_user.id, "todo_id" => todo.id, is_owner: true)
     if share.save
@@ -61,6 +64,7 @@ class Todo < ApplicationRecord
     end
   end
 
+  #fucntion to move/change the posisiton values of two adajacent todos, either up or down
   def self.move(direction, current_todo, current_user)
     user = User.find_by(id: current_user.id)
     case direction
@@ -85,6 +89,7 @@ class Todo < ApplicationRecord
     end
   end
 
+  #function to find the last todo's position of a user
   def self.find_last_position(user_id)
     user = User.find_by(id: user_id)
     top_todo = (user.shares.order(:position)).last

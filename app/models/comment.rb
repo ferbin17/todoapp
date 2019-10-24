@@ -5,6 +5,7 @@ class Comment < ApplicationRecord
 
   scope :commentjoinuser, lambda { |todo_id, comment_id | joins(:user).select('users.*,comments.*').where("comments.todo_id = ? and comments.id=?", todo_id, comment_id) }
 
+  #function to create comments
   def self.create_comment(params, current_user)
     todo = Todo.find_by(id: params[:todo_id])
     shares = todo.shares.select("user_id")
@@ -23,6 +24,7 @@ class Comment < ApplicationRecord
     return comment
   end
 
+  #function to construct comment body
   def self.parse_comment(params)
     if params.key?(:comment)
       return { "body" => "\"#{params[:comment]}\"" }
