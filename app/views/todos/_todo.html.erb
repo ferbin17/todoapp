@@ -6,7 +6,7 @@
         <%= link_to todo.body, todo %>
       </div>
       <div class = "todo-time">
-        <%= todo.created_at.strftime("%l.%M %P, %e %B %Y") %>
+        <%= format_time(todo.created_at) %>
       </div>
     </div>
     <div class = "col-4 todo-options">

@@ -5,7 +5,7 @@ class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :todo
 
-  scope :commentjoinuser, ->(todo_id, comment_id) { joins(:user).select('users.*,comments.*').where('comments.todo_id = ? and comments.id=?', todo_id, comment_id) }
+  scope :comment_join_user, ->(todo_id, comment_id) { joins(:user).select('users.*,comments.*').where('comments.todo_id = ? and comments.id=?', todo_id, comment_id) }
 
   # function to create comments
   def self.create_comment(params, current_user)
@@ -14,7 +14,7 @@ class Comment < ApplicationRecord
     unless shares.find_by(user_id: current_user.id).nil?
       comment = todo.comments.build(generate_comment(params).merge('user_id' => current_user.id))
       if comment.save
-        comment = Comment.commentjoinuser(todo.id, comment.id)[0]
+        comment = Comment.comment_join_user(todo.id, comment.id)[0]
         if params.key?(:new_value)
           todo.update(completion_status: params[:new_value])
           todo.save
