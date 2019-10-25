@@ -1,8 +1,8 @@
-# frozen_string_literal: true
-
 class TodosController < ApplicationController
   respond_to :html, :js
   before_action :find_todo, only: %i[destroy update]
+
+  helper FormattedTimeHelper
 
   # index
   def index

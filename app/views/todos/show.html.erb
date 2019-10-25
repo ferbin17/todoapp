@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class = "todo-det-time" >
-        <%= @todo.created_at.strftime("%l.%M %P, %e %B %Y") %>
+        <%= format_time(@todo.created_at) %>
       </div>
       <div class = "row">
         <div class = "task-bar col-11">
