@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_many :shares
   has_many :todos, through: :shares, dependent: :destroy
 
-  has_many :todos, dependent: :destroy
+  # has_many :todos, dependent: :destroy
   has_many :comments, dependent: :destroy
 
   scope :all_user_except_one, ->(user) { where('id != ?', user.id) }

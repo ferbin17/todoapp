@@ -13,8 +13,7 @@ class TodosController < ApplicationController
       respond_to :js
     else
       # returns 5 active todos each with pagination at first loading
-      p current_user.todos
-      todos = Todo.user_shared_partial_todos(true, current_user)
+      todos = current_user.todos.select_shares_and_todo.active_status_todos(true).order_by(:desc)
       @todos = todos.paginate(page: params[:page])
     end
   end
@@ -22,13 +21,13 @@ class TodosController < ApplicationController
   # function for crating new todos, inserting corresponding entry in share table and update position value
   def create
     @todo = Todo.create_entry_in_todo(params, current_user)
-    @todos = Todo.user_shared_partial_todos(true, current_user)
+    @todos = current_user.todos.active_status_todos(true)
   end
 
   # function for deleteing todos and redirect to corresponding page with respect to the page from which the request came
   def destroy
     @todo.destroy
-    @todos = Todo.user_shared_partial_todos(@todo.active?, current_user)
+    @todos = current_user.todos.active_status_todos(@todo.active?)
     url = Rails.application.routes.recognize_path(request.referrer)
     if url[:action] == 'show'
       render js: "window.location = './../'"
@@ -42,12 +41,12 @@ class TodosController < ApplicationController
     url = Rails.application.routes.recognize_path(request.referrer)
     @page = url[:action]
     @todo.update(active: !@todo.active?)
-    @todos = Todo.user_shared_partial_todos(params[:active], current_user)
+    @todos = current_user.todos.active_status_todos(!@todo.active?)
   end
 
   # funtion for rearranging todos
   def rearrange
-    @todo = Todo.todo_join_shares.user_shared_todos(current_user).where('todos.id = ?', params[:id])[0]
+    @todo = current_user.todos.select_shares_and_todo.where(id: params[:id])[0]
     @direction = params[:direction]
     if params[:direction] == 'down'
       Todo.move('down', @todo, current_user)
@@ -58,7 +57,7 @@ class TodosController < ApplicationController
 
   # funtion for showing each individual todo
   def show
-    @todo = Todo.user_shared_todos(current_user).where(id: params[:id])[0]
+    @todo =  current_user.todos.select_shares_and_todo.where(id: params[:id])[0]
     @shared = User.joins(:shares).select('users.*,shares.*').where('shares.todo_id = ? and shares.user_id != ?', @todo.id, @todo.user_id)
     @comments = User.joins(:comments).select('comments.*,users.*').where('comments.todo_id = ?', @todo.id)
   end

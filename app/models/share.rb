@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Share < ApplicationRecord
-  has_many :todos
+  # has_many :todos
   belongs_to :user
   belongs_to :todo
 
