@@ -13,6 +13,7 @@ class TodosController < ApplicationController
       respond_to :js
     else
       # returns 5 active todos each with pagination at first loading
+      p current_user.todos
       todos = Todo.user_shared_partial_todos(true, current_user)
       @todos = todos.paginate(page: params[:page])
     end
