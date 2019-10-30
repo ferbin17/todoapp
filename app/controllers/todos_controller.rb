@@ -21,16 +21,14 @@ class TodosController < ApplicationController
   # function for crating new todos, inserting corresponding entry in share table and update position value
   def create
     @todo = Todo.create_entry_in_todo(params, current_user)
-    @todos = current_user.todos.active_status_todos(true)
   end
 
   # function for deleteing todos and redirect to corresponding page with respect to the page from which the request came
   def destroy
     @todo.destroy
-    @todos = current_user.todos.active_status_todos(@todo.active?)
     url = Rails.application.routes.recognize_path(request.referrer)
     if url[:action] == 'show'
-      render js: "window.location = './../'"
+      render :back
     else
       respond_to :js
     end
@@ -41,7 +39,6 @@ class TodosController < ApplicationController
     url = Rails.application.routes.recognize_path(request.referrer)
     @page = url[:action]
     @todo.update(active: !@todo.active?)
-    @todos = current_user.todos.active_status_todos(!@todo.active?)
   end
 
   # funtion for rearranging todos

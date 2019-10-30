@@ -1,11 +1,11 @@
+$(".todo-entry").val('');
 
-var empty = <%= @todos.length %>
-if (empty == 1){
+count = $('.todo').length;
+if (count == 0){
   $(".todos").html("<%= escape_javascript render(:partial => 'todo', :locals => { :todo => @todo }) %>");
 }
 else{
   $(".todos").prepend("<%= escape_javascript render(:partial => 'todo', :locals => { :todo => @todo }) %>");
 };
-$(".todo-entry").val('');
 
 arrow_correction();
