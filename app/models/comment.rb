@@ -17,8 +17,13 @@ class Comment < ApplicationRecord
         comment = Comment.comment_join_user(todo.id, comment.id)[0]
         if params.key?(:new_value)
           todo.update(completion_status: params[:new_value])
-          todo.save
+          if todo.save
+          else
+            #show errors
+          end
         end
+      else
+        #show errors
       end
     end
     comment

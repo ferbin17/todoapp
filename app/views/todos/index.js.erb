@@ -20,12 +20,12 @@ $(".digg_pagination").html(`<%= will_paginate @todos, page_links: false %>`);
 $('.pagination a').attr('data-remote', 'true');
 
 var empty = <%= @todos.empty? %>
-if (empty){
+if (empty && !active_status){
   status1 = status2 = false;
 }
 else{
-  var status1 = <%= (@todos.to_a == Todo.active_only.where(user_id: current_user.id).to_a) || @todos.all? { |todo| todo.active == true } %> ;
-  var status2 = <%= @todos.to_a == Todo.inactive_only.where(user_id: current_user.id).to_a || @todos.all? { |todo| todo.active == false } %> ;
+  var status1 = <%= @todos.to_a == Todo.active_only.where(user_id: current_user.id).to_a %> ;
+  var status2 = <%= @todos.to_a == Todo.inactive_only.where(user_id: current_user.id).to_a %> ;
 };
 $("#active_status_active_only").prop("checked", status1);
 $("#active_status_inactive_only").prop("checked", status2);

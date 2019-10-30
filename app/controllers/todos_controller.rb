@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TodosController < ApplicationController
   respond_to :html, :js
   before_action :find_todo, only: %i[destroy update]
@@ -8,13 +10,11 @@ class TodosController < ApplicationController
   def index
     # calls mode function to return todos when params has either search or active status params
     if params.key?(:search) || params.key?(:active_status)
-      todos = Todo.find_mode_and_return_todos(params, current_user)
-      @todos = todos.paginate(page: params[:page])
+      @todos = Todo.find_mode_and_return_todos(params, current_user).paginate(page: params[:page])
       respond_to :js
     else
       # returns 5 active todos each with pagination at first loading
-      todos = current_user.todos.select_shares_and_todo.active_status_todos(true).order_by(:desc)
-      @todos = todos.paginate(page: params[:page])
+      @todos = current_user.active_todos.paginate(page: params[:page])
     end
   end
 
@@ -49,18 +49,20 @@ class TodosController < ApplicationController
     @todo = current_user.todos.select_shares_and_todo.where(id: params[:id])[0]
     @direction = params[:direction]
     if params[:direction] == 'down'
-      Todo.move('down', @todo, current_user)
+      Todo.check_move('down', @todo, current_user)
     else
-      Todo.move('up', @todo, current_user)
+      Todo.check_move('up', @todo, current_user)
     end
   end
 
   # funtion for showing each individual todo
   def show
-    @todo =  current_user.todos.select_shares_and_todo.where(id: params[:id])[0]
-    @shared = User.joins(:shares).select('users.*,shares.*').where('shares.todo_id = ? and shares.user_id != ?', @todo.id, @todo.user_id)
-    @comments = User.joins(:comments).select('comments.*,users.*').where('comments.todo_id = ?', @todo.id)
+    @todo = current_user.todos.select_shares_and_todo.where(id: params[:id])[0]
+    @shared = User.get_shared_users(@todo)
+    @comments = User.get_comments(@todo)
   end
+
+  private
 
   def find_todo
     @todo = Todo.find_by(id: params[:id])

@@ -8,6 +8,8 @@ class Share < ApplicationRecord
   scope :shared_users, ->(id) { where('todo_id=? AND is_owner=false', id).order(:user_id) }
   scope :select_user_id, -> { select('user_id') }
   scope :create_share_entry, ->(user_id, todo_id, position) { create(user_id: user_id, todo_id: todo_id, position: position) }
+  scope :logged_user, ->(current_user) { where(user_id: current_user.id) }
+
 
   # function to manage share entries
   def self.manage_share(params)
@@ -36,6 +38,8 @@ class Share < ApplicationRecord
     if share.save
       position = find_last_position(current_user)
       share.update(position: position)
+    else
+      #show errors
     end
   end
 
