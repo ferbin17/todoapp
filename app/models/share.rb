@@ -31,7 +31,7 @@ class Share < ApplicationRecord
         position = find_last_position(user)
         Share.create_share_entry(user_id, params[:id], position)
       else
-        #show
+        #show errors
         { errors: "Todo not found" }
       end
     end
@@ -45,7 +45,7 @@ class Share < ApplicationRecord
       share.update(position: position)
     else
       #show errors
-      { errors: todo.errors.full_messages } 
+      { errors: todo.errors.full_messages }
     end
   end
 
