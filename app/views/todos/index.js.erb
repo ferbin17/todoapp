@@ -3,7 +3,7 @@ if (active_status){
   $(".search_todos").val('');
 
 }
-
+<% p @todos %>
 var count = $('.todo').length;
 if(count == 0){
   $(".todos").html(`<% if @todos.empty? %><div class = "nothing">

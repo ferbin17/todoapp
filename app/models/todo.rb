@@ -14,19 +14,21 @@ class Todo < ApplicationRecord
   scope :active_status_todos, ->(active_status) { where(active: active_status) }
   scope :order_by, ->(order) { order(position: order) }
   scope :logged_user, ->(current_user) { where(user_id: current_user.id) }
-  scope :search, ->(like_keyword) { where('body LIKE ?', like_keyword) }
+  scope :search, ->(like_keyword, params) { select_shares_and_todo.where('body LIKE ?', like_keyword).order_by(:desc).pagination(params) }
   scope :active_only, -> { where(active: true) }
   scope :inactive_only, -> { where(active: false) }
   scope :previous_todo, ->(current_user, current_todo) { current_user.todos.select_shares_and_todo.where('position < ?', current_todo.position).active_status_todos(current_todo.active?).order_by(:desc).limit(1) }
   scope :next_todo, ->(current_user, current_todo) { current_user.todos.select_shares_and_todo.where('position > ?', current_todo.position).active_status_todos(current_todo.active?).order_by(:asc).limit(1) }
+  scope :pagination, ->(params) { paginate(page: params[:page]) }
+  scope :todo_join_shares, ->(active_status, params) { select_shares_and_todo.active_status_todos(active_status).order_by(:desc).pagination(params) }
   self.per_page = 5
 
   # function to todos with respect to their params
   def self.find_mode_and_return_todos(params, current_user)
     if params.key?(:search)
-      current_user.search_todo(params[:search])
+      current_user.search_todo(params[:search], params)
     else
-      current_user.active_or_inactive_todos(params[:active_status])
+      current_user.active_or_inactive_todos(params)
     end
   end
 
@@ -42,7 +44,7 @@ class Todo < ApplicationRecord
     end
   end
 
-  # fucntion to move/change the posisiton values of two adajacent todos, either up or down
+  # fucntion to check if move/change the posisiton values of two adajacent todos, either up or down is possible or not
   def self.check_move(direction, current_todo, current_user)
     todo = fetch_todo(direction, current_todo, current_user)
     if todo.present?
@@ -52,6 +54,7 @@ class Todo < ApplicationRecord
     end
   end
 
+  # fucntion to check if move/change the posisiton values of two adajacent todos, either up or down if possible
   def self.move(current_todo, todo, current_user)
     position = todo[0].position
     todo = todo[0].shares.logged_user(current_user)
@@ -60,6 +63,7 @@ class Todo < ApplicationRecord
     current_todo[0].update(position: position)
   end
 
+  #function to fetch previous or next todo depending on direction
   def self.fetch_todo(direction, current_todo, current_user)
     case direction
     when 'down'

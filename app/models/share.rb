@@ -26,9 +26,13 @@ class Share < ApplicationRecord
 
       next unless shared.find_by(user_id: user_id).nil?
 
-      user = User.find(user_id)
-      position = find_last_position(user)
-      Share.create_share_entry(user_id, params[:id], position)
+      user = User.find_by(id: user_id)
+      unless user.nil?
+        position = find_last_position(user)
+        Share.create_share_entry(user_id, params[:id], position)
+      else
+        #show
+      end
     end
   end
 

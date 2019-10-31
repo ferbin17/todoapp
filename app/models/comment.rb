@@ -10,23 +10,27 @@ class Comment < ApplicationRecord
   # function to create comments
   def self.create_comment(params, current_user)
     todo = Todo.find_by(id: params[:todo_id])
-    shares = todo.shares.select('user_id')
-    unless shares.find_by(user_id: current_user.id).nil?
-      comment = todo.comments.build(generate_comment(params).merge('user_id' => current_user.id))
-      if comment.save
-        comment = Comment.comment_join_user(todo.id, comment.id)[0]
-        if params.key?(:new_value)
-          todo.update(completion_status: params[:new_value])
-          if todo.save
-          else
+    unless todo.nil?
+      shares = todo.shares.select('user_id')
+      unless shares.find_by(user_id: current_user.id).nil?
+        comment = todo.comments.build(generate_comment(params).merge('user_id' => current_user.id))
+        if comment.save
+          comment = Comment.comment_join_user(todo.id, comment.id)[0]
+          if params.key?(:new_value)
+            todo.update(completion_status: params[:new_value])
+            if todo.save
+            else
             #show errors
+            end
           end
-        end
-      else
+        else
         #show errors
+        end
       end
+      comment
+    else
+      #show errors
     end
-    comment
   end
 
   # function to construct comment body
@@ -36,7 +40,9 @@ class Comment < ApplicationRecord
     else
       (params[:old_value]).gsub!((params[:old_value])[-1], '')
       unless params[:old_value] == params[:new_value]
-        body = { body: 'Task has been updated from <span class="green-text">' + params[:old_value] + '%<span> to <span class="green-text">' + params[:new_value] + '%<span>' }
+        body = { body: 'Task has been updated from <span class="green-text">' +
+           params[:old_value] + '%<span> to <span class="green-text">' +
+            params[:new_value] + '%<span>' }
         body = { body: 'Status of the task changed to <span class="green-text">Done<span>' } if params[:new_value] == '100'
       end
     end
