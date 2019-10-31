@@ -18,21 +18,29 @@ class User < ApplicationRecord
   scope :get_shared_users, ->(todo) { joins(:shares).select('users.*,shares.*').where('shares.todo_id = ? and shares.user_id != ?', todo.id, todo.user_id) }
   scope :get_comments, ->(todo) { joins(:comments).select('users.*,comments.*').where('comments.todo_id = ?', todo.id) }
 
-  #fetch acitve todos of a todos
-  def active_todos
-    todos.select_shares_and_todo.active_status_todos(true).order_by(:desc)
+  #f etch acitve todos of a todos
+  def active_todos(params)
+    todos.todo_join_shares(true, params)
   end
 
   # returns either all active todos or all inactive_only todos
-  def active_or_inactive_todos(active_status)
-    flag = active_status == 'active_only'
-    todos.select_shares_and_todo.active_status_todos(flag).order_by(:desc)
+  def active_or_inactive_todos(params)
+    flag = params[:active_status] == 'active_only'
+    todos.todo_join_shares(flag, params)
+  end
+
+  # function to get a todo along with its user details
+  def get_a_todo(params)
+    todos.select_shares_and_todo.where(id: params[:id])[0]
   end
 
   # Searching todo, returns all active todos if keyword is not present else returns the search results
-  def search_todo(search_key)
-    like_keyword = "%#{search_key}%"
-    like_keyword == '%%' ? todos.select_shares_and_todo.active_status_todos(true).order_by(:desc) : todos.select_shares_and_todo.search(like_keyword).order_by(:desc)
+  def search_todo(search_key, params)
+    if search_key.present?
+      todos.search("%#{search_key}%", params)
+    else
+      todos.todo_join_shares(true, params)
+    end
   end
 
 end

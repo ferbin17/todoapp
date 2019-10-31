@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   post 'todos/rearrange'
 
@@ -9,8 +11,6 @@ Rails.application.routes.draw do
     resources :comments
   end
 
-
-
-  root "todos#index"
+  root 'todos#index'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

@@ -8,4 +8,8 @@ else{
   $(".todos").prepend("<%= escape_javascript render(:partial => 'todo', :locals => { :todo => @todo }) %>");
 };
 
+if($('.todo').length > 5){
+  location.reload();
+}
+
 arrow_correction();

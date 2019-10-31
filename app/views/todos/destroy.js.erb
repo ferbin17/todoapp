@@ -1,3 +1,7 @@
 $('#T<%= j @todo.id %>').remove();
 
+if($('.todo').length == 0){
+  location.reload();
+}
+
 arrow_correction();

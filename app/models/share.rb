@@ -26,9 +26,14 @@ class Share < ApplicationRecord
 
       next unless shared.find_by(user_id: user_id).nil?
 
-      user = User.find(user_id)
-      position = find_last_position(user)
-      Share.create_share_entry(user_id, params[:id], position)
+      user = User.find_by(id: user_id)
+      unless user.nil?
+        position = find_last_position(user)
+        Share.create_share_entry(user_id, params[:id], position)
+      else
+        #show
+        { errors: "Todo not found" }
+      end
     end
   end
 
@@ -40,6 +45,7 @@ class Share < ApplicationRecord
       share.update(position: position)
     else
       #show errors
+      { errors: todo.errors.full_messages } 
     end
   end
 

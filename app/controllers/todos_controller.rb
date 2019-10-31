@@ -3,18 +3,18 @@
 class TodosController < ApplicationController
   respond_to :html, :js
   before_action :find_todo, only: %i[destroy update]
-
+  
   helper FormattedTimeHelper
 
   # index
   def index
     # calls mode function to return todos when params has either search or active status params
     if params.key?(:search) || params.key?(:active_status)
-      @todos = Todo.find_mode_and_return_todos(params, current_user).paginate(page: params[:page])
+      @todos = Todo.find_mode_and_return_todos(params, current_user)
       respond_to :js
     else
       # returns 5 active todos each with pagination at first loading
-      @todos = current_user.active_todos.paginate(page: params[:page])
+      @todos = current_user.active_todos(params)
     end
   end
 
@@ -28,9 +28,9 @@ class TodosController < ApplicationController
     @todo.destroy
     url = Rails.application.routes.recognize_path(request.referrer)
     if url[:action] == 'show'
-      render :back
+      render :js => "window.location = './../'"
     else
-      respond_to :js
+      respond_to :js, status: 404
     end
   end
 
@@ -43,7 +43,7 @@ class TodosController < ApplicationController
 
   # funtion for rearranging todos
   def rearrange
-    @todo = current_user.todos.select_shares_and_todo.where(id: params[:id])[0]
+    @todo = current_user.get_a_todo(params)
     @direction = params[:direction]
     if params[:direction] == 'down'
       Todo.check_move('down', @todo, current_user)
@@ -54,14 +54,16 @@ class TodosController < ApplicationController
 
   # funtion for showing each individual todo
   def show
-    @todo = current_user.todos.select_shares_and_todo.where(id: params[:id])[0]
+    @todo = current_user.get_a_todo(params)
     @shared = User.get_shared_users(@todo)
     @comments = User.get_comments(@todo)
   end
 
   private
 
+  # function to find a todo with its id
   def find_todo
     @todo = Todo.find_by(id: params[:id])
   end
+
 end
