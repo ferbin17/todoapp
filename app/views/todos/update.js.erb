@@ -1,17 +1,29 @@
-var page = "<%= @page %>"
-if(page == "show"){
-  var status = $('#<%= j @todo.id %>').attr("data-url");
-  active = status.split("=");
-  if (active[1] == "true"){
-    $('#<%= j @todo.id %>').attr("data-url",active[0]+"=false")
-  }else{
-    $('#<%= j @todo.id %>').attr("data-url",active[0]+"=true")
-  };
-}else{
-  $('#T<%= j @todo.id %>').remove();
+<% if @todo.is_a? Hash %>
+  $('.message-here').show();
+  $('.message-here').html(`<% if notice %><p class="alert alert-success">
+    <%= notice %></p><% end %>
+    <% if @todo.key?(:errors) %><div class="alert alert-danger">
+    <% @todo[:errors].each do |error| %>
+    <p><%= error %></p>
+    <% end %><% end %>`);
+  $('.message-here').delay(3000).fadeOut();
+  setTimeout(location.reload.bind(location), 4000);
+<% else %>
+  $('.message-here').hide();  
+  <% if @page == "show" %>
+    var status = $('#<%= j @todo.id %>').attr("data-url");
+    active = status.split("=");
+    if (active[1] == "true"){
+      $('#<%= j @todo.id %>').attr("data-url",active[0]+"=false")
+    }else{
+      $('#<%= j @todo.id %>').attr("data-url",active[0]+"=true")
+    };
+  <% else %>
+    $('#T<%= j @todo.id %>').remove();
 
-  $(".todo-entry").val('');
-  $(".search_todos").val('');
+    $(".todo-entry").val('');
+    $(".search_todos").val('');
 
-  arrow_correction();
-}
+    arrow_correction();
+  <% end %>
+<% end %>

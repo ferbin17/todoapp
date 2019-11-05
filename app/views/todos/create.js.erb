@@ -1,12 +1,23 @@
 $(".todo-entry").val('');
 
-count = $('.todo').length;
-if (count == 0){
-  $(".todos").html("<%= escape_javascript render(:partial => 'todo', :locals => { :todo => @todo }) %>");
-}
-else{
-  $(".todos").prepend("<%= escape_javascript render(:partial => 'todo', :locals => { :todo => @todo }) %>");
-};
+<% if @todo.is_a? Hash %>
+$('.message-here').show();
+   $('.message-here').html(`<% if notice %><p class="alert alert-success">
+   <%= notice %></p><% end %>
+   <% if @todo.key?(:errors) %><div class="alert alert-danger">
+   <% @todo[:errors].each do |error| %>
+   <p><%= error %></p>
+   <% end %><% end %>`);
+   $('.message-here').delay(3000).fadeOut();
+<% else %>
+  $('.message-here').hide();
+  count = $('.todo').length;
+  if (count == 0){
+    $(".todos").html("<%= escape_javascript render(:partial => 'todo', :locals => { :todo => @todo }) %>");
+  }else {
+    $(".todos").prepend("<%= escape_javascript render(:partial => 'todo', :locals => { :todo => @todo }) %>");
+  };
+<% end %>
 
 if($('.todo').length > 5){
   location.reload();

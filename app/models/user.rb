@@ -43,4 +43,11 @@ class User < ApplicationRecord
     end
   end
 
+  def previous_todo(current_todo)
+    todos.select_shares_and_todo.where('position < ?', current_todo.position).active_status_todos(current_todo.active?).order_by(:desc).limit(1)
+  end
+
+  def next_todo(current_todo)
+    todos.select_shares_and_todo.where('position > ?', current_todo.position).active_status_todos(current_todo.active?).order_by(:asc).limit(1)
+  end
 end

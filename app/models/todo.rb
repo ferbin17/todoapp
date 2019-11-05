@@ -17,8 +17,6 @@ class Todo < ApplicationRecord
   scope :search, ->(like_keyword, params) { select_shares_and_todo.where('body LIKE ?', like_keyword).order_by(:desc).pagination(params) }
   scope :active_only, -> { where(active: true) }
   scope :inactive_only, -> { where(active: false) }
-  scope :previous_todo, ->(current_user, current_todo) { current_user.todos.select_shares_and_todo.where('position < ?', current_todo.position).active_status_todos(current_todo.active?).order_by(:desc).limit(1) }
-  scope :next_todo, ->(current_user, current_todo) { current_user.todos.select_shares_and_todo.where('position > ?', current_todo.position).active_status_todos(current_todo.active?).order_by(:asc).limit(1) }
   scope :pagination, ->(params) { paginate(page: params[:page]) }
   scope :todo_join_shares, ->(active_status, params) { select_shares_and_todo.active_status_todos(active_status).order_by(:desc).pagination(params) }
 
@@ -36,13 +34,21 @@ class Todo < ApplicationRecord
   # function to create a entry in todo table
   def self.create_entry_in_todo(params, current_user)
     body = { 'body' => params[:create] }
-    todo = Todo.new(body.merge('user_id' => current_user.id))
+    todo = Todo.new(body)
     if todo.save
       Share.create_entry_in_share(todo, current_user)
       current_user.todos.select_shares_and_todo.where(id: todo.id)[0]
     else
       # show errors
       { errors: todo.errors.full_messages }
+    end
+  end
+
+  def self.set_parameters_for_move(direction, current_todo, current_user)
+    if direction == 'down'
+      Todo.check_move('down', current_todo, current_user)
+    else
+      Todo.check_move('up', current_todo, current_user)
     end
   end
 
@@ -53,7 +59,7 @@ class Todo < ApplicationRecord
       move(current_todo, todo, current_user)
     else
       # show erros
-      { errors: "Todo not found" }
+      { errors: ["Todo not found"] }
     end
   end
 
@@ -70,9 +76,9 @@ class Todo < ApplicationRecord
   def self.fetch_todo(direction, current_todo, current_user)
     case direction
     when 'down'
-      Todo.previous_todo(current_user, current_todo)
+      current_user.previous_todo(current_todo)
     when 'up'
-      Todo.next_todo(current_user, current_todo)
+      current_user.next_todo(current_todo)
     end
   end
 end

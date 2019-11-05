@@ -3,7 +3,7 @@
 class TodosController < ApplicationController
   respond_to :html, :js
   before_action :find_todo, only: %i[destroy update]
-  
+
   helper FormattedTimeHelper
 
   # index
@@ -25,12 +25,16 @@ class TodosController < ApplicationController
 
   # function for deleteing todos and redirect to corresponding page with respect to the page from which the request came
   def destroy
-    @todo.destroy
+    unless @todo.is_a? Hash
+      unless @todo.destroy
+        { errors: @todo.errors.full_messages }
+      end
+    end
     url = Rails.application.routes.recognize_path(request.referrer)
     if url[:action] == 'show'
       render :js => "window.location = './../'"
     else
-      respond_to :js, status: 404
+      respond_to :js
     end
   end
 
@@ -38,23 +42,28 @@ class TodosController < ApplicationController
   def update
     url = Rails.application.routes.recognize_path(request.referrer)
     @page = url[:action]
-    @todo.update(active: !@todo.active?)
+    unless @todo.is_a? Hash
+      @todo.update(active: !@todo.active?)
+      unless @todo.save
+        { errors: @todo.errors.full_messages }
+      end
+    end
   end
 
   # funtion for rearranging todos
   def rearrange
-    @todo = current_user.get_a_todo(params)
-    @direction = params[:direction]
-    if params[:direction] == 'down'
-      Todo.check_move('down', @todo, current_user)
-    else
-      Todo.check_move('up', @todo, current_user)
+    @todo = current_user.get_a_todo(params) || { errors: ["Todo doesn't exist"] }
+    unless @todo.is_a? Hash
+      @next_todo = Todo.set_parameters_for_move(params[:direction], @todo, current_user)
+      @todo = { errors: ["Todo doesn't exist"] } if @next_todo.is_a? Hash
+      @direction = params[:direction]
     end
   end
 
   # funtion for showing each individual todo
   def show
     @todo = current_user.get_a_todo(params)
+    not_found unless @todo.present?
     @shared = User.get_shared_users(@todo)
     @comments = User.get_comments(@todo)
   end
@@ -63,7 +72,7 @@ class TodosController < ApplicationController
 
   # function to find a todo with its id
   def find_todo
-    @todo = Todo.find_by(id: params[:id])
+    @todo = Todo.find_by(id: params[:id]) || { errors: ["Todo doesn't exist"] }
   end
 
 end
