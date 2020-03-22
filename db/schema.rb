@@ -10,9 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_04_052148) do
+ActiveRecord::Schema.define(version: 2019_10_17_062827) do
 
-  create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "comments", force: :cascade do |t|
     t.string "body"
     t.bigint "todo_id"
     t.bigint "user_id"
@@ -22,7 +25,7 @@ ActiveRecord::Schema.define(version: 2019_11_04_052148) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "shares", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "shares", force: :cascade do |t|
     t.bigint "todo_id"
     t.bigint "user_id"
     t.bigint "position", default: 0, null: false
@@ -33,15 +36,15 @@ ActiveRecord::Schema.define(version: 2019_11_04_052148) do
     t.index ["user_id"], name: "index_shares_on_user_id"
   end
 
-  create_table "todos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "todos", force: :cascade do |t|
     t.string "body"
+    t.datetime "datetime"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "active", default: true, null: false
     t.bigint "completion_status", default: 0, null: false
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -49,7 +52,6 @@ ActiveRecord::Schema.define(version: 2019_11_04_052148) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "name", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
